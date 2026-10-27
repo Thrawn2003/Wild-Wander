@@ -298,9 +298,59 @@ dialog[open] { animation: pop .3s ease; }
 .wow { margin: 0 0 14px; padding-left: 1.2rem; }
 .wow li { margin-bottom: 6px; }
 .card .power { margin: 2px 0 0; font-size: .88rem; color: var(--ink); line-height: 1.35; }
+  
+html.locked, html.locked body { overflow: hidden; height: 100%; }
+html.locked body > :not(#gate):not(script) { visibility: hidden; }
+.gate { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 16px; background: linear-gradient(180deg, #cfe3d4 0%, #e6efdc 100%); }
+.gate[hidden] { display: none; }
+@media (prefers-color-scheme: dark) { .gate { background: linear-gradient(180deg, #1d3a30 0%, #14201c 100%); } }
+.gate-card { width: min(380px, 100%); display: grid; gap: 12px; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 28px 24px; box-shadow: var(--shadow); }
+.gate-card h1 { font-size: 2rem; }
+.gate-emoji { margin: 0; font-size: 2.5rem; }
+.gate-sub { margin: 0; color: var(--ink-soft); }
+.gate-card input { padding: 13px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); text-align: center; }
+.gate-err { margin: 0; color: #b3261e; font-size: .9rem; }
+.gate-err[hidden] { display: none; }
   </style>
 </head>
 <body>
+  <div id="gate" class="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <form id="gateForm" class="gate-card" autocomplete="off">
+      <p class="gate-emoji" aria-hidden="true">🌿</p>
+      <h1 id="gateTitle">Wild Wander</h1>
+      <p class="gate-sub">Enter the password to come in.</p>
+      <label class="sr-only" for="gatePw">Password</label>
+      <input id="gatePw" type="password" placeholder="Password" autocomplete="current-password" required>
+      <button class="btn btn-solid" type="submit">Enter</button>
+      <p id="gateErr" class="gate-err" role="alert" hidden>That password is not right. Try again.</p>
+    </form>
+  </div>
+  <script>
+    (function () {
+      var HASH = "933e1ed6b5197e7303e3221f51afda7a2495567b5e97f0e8c153e5ec68552424";
+      var gate = document.getElementById('gate');
+      document.documentElement.classList.add('locked');
+      function open() { gate.hidden = true; document.documentElement.classList.remove('locked'); }
+      function sha(text) {
+        return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(function (b) {
+          return Array.from(new Uint8Array(b)).map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+        });
+      }
+      try { if (localStorage.getItem('ww-unlocked') === HASH) open(); } catch (e) {}
+      document.getElementById('gateForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        sha(document.getElementById('gatePw').value).then(function (h) {
+          if (h === HASH) {
+            try { localStorage.setItem('ww-unlocked', HASH); } catch (e) {}
+            open();
+          } else {
+            document.getElementById('gateErr').hidden = false;
+            document.getElementById('gatePw').select();
+          }
+        });
+      });
+    })();
+  </script>
   <a class="skip" href="#grid">Skip to the results</a>
 
   <header class="hero">
