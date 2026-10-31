@@ -311,7 +311,22 @@ html.locked body > :not(#gate):not(script) { visibility: hidden; }
 .gate-card input { padding: 13px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); text-align: center; }
 .gate-err { margin: 0; color: #b3261e; font-size: .9rem; }
 .gate-err[hidden] { display: none; }
-  </style>
+  
+/* Voice & speed controls, kid mode */
+.voice-bar { display: grid; gap: 10px; margin: 12px 0 0; padding: 12px; border: 1px solid var(--line); border-radius: 16px; }
+.voice-bar label { display: grid; gap: 4px; font-weight: 700; color: var(--ink-soft); font-size: .95rem; }
+.voice-bar select { padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); max-width: 100%; font: inherit; font-weight: 400; }
+.speed { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.speed-out { min-width: 4.2rem; text-align: center; font-weight: 700; font-size: 1.15rem; }
+.voice-bar input[type=range] { width: 100%; accent-color: var(--forest); }
+.kid-toggle { white-space: nowrap; }
+.kid-toggle[aria-pressed="true"] { background: var(--forest); color: var(--forest-ink); border-color: transparent; }
+.grown-up { margin: 14px 0; color: var(--ink-soft); }
+.grown-up summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+.kid-story { font-size: 1.12rem; line-height: 1.6; }
+.kid-story h3 { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; font-family: var(--sans); color: var(--clay); margin: 4px 0 8px; }
+.wow.kid li { font-size: 1.05rem; }
+</style>
 </head>
 <body>
   <div id="gate" class="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
@@ -423,6 +438,7 @@ html.locked body > :not(#gate):not(script) { visibility: hidden; }
         <button class="icon-btn" id="prev" type="button" aria-label="Previous">‹</button>
         <button class="icon-btn" id="next" type="button" aria-label="Next">›</button>
         <span class="spacer"></span>
+        <button class="btn kid-toggle" id="kidToggle" type="button" aria-pressed="true" title="Simple words and short stories for young explorers">🧒 Kid mode</button>
         <button class="icon-btn" id="dFav" type="button" aria-label="Save this one" aria-pressed="false">♡</button>
         <button class="icon-btn" id="dClose" type="button" aria-label="Close">✕</button>
       </div>
@@ -446,15 +462,20 @@ html.locked body > :not(#gate):not(script) { visibility: hidden; }
             <span id="sayStatus" class="say-status" role="status" aria-live="polite"></span>
           </div>
 
+          <div class="voice-bar">
+            <label class="vb-voice">🗣️ Voice
+              <select id="voice"></select>
+            </label>
+            <div class="speed" role="group" aria-label="Reading speed">
+              <button id="slower" class="btn" type="button" aria-label="Read slower">🐢 Slower</button>
+              <output id="rateOut" class="speed-out" aria-live="polite"></output>
+              <button id="faster" class="btn" type="button" aria-label="Read faster">Faster 🐇</button>
+            </div>
+            <input id="rate" type="range" min="0.5" max="2" step="0.05" aria-label="Reading speed">
+          </div>
           <details class="voice-opts">
-            <summary>Voice &amp; sound settings</summary>
+            <summary>More sound settings</summary>
             <div class="voice-grid">
-              <label>Voice
-                <select id="voice"></select>
-              </label>
-              <label>Pace <output id="rateOut"></output>
-                <input id="rate" type="range" min="0.6" max="1.2" step="0.02">
-              </label>
               <label class="check"><input id="ambient" type="checkbox"> Play soft nature ambience</label>
             </div>
             <p id="voiceHelp" class="help"></p>
@@ -1939,11 +1960,427 @@ for (const sp of SPECIES) if (EDIBLE_PATCH[sp.id]) sp.edible = EDIBLE_PATCH[sp.i
 
 
 /* =====================================================================
+   MORE SLOTHS, INSECTS, EDIBLE PLANTS AND FUNGI
+   ===================================================================== */
+/* ---------- Sloths ---------- */
+a('Linnaeus’s two-toed sloth', 'Choloepus didactylus', '🦥', 'Linnaeus\'s_two-toed_sloth', 'Mammals',
+  ['Rainforest'], ['South America'], 'Herbivore', 'Night', 'Least Concern', 'Medium',
+  'Up to 74 cm long · 8 kg', '20–30 years',
+  'This sloth has two long claws on each front foot, and spends almost its whole life hanging upside down in the rainforest canopy. It sleeps through much of the day, and wakes at night to nibble leaves, fruit and flowers. Its shaggy fur and sleepy face make it look as if it is smiling.',
+  'It has two fingers on each front foot, but three toes on each back foot.');
+
+a('Hoffmann’s two-toed sloth', 'Choloepus hoffmanni', '🦥', 'Hoffmann\'s_two-toed_sloth', 'Mammals',
+  ['Rainforest', 'Mountain'], ['North America', 'South America'], 'Herbivore', 'Night', 'Least Concern', 'Medium',
+  'Up to 70 cm long · 8 kg', 'Around 30 years',
+  'Hoffmann’s sloth lives in forests from Honduras down to Peru, from warm lowlands to cool, misty mountain slopes. It moves slowly through the treetops at night, eating leaves, buds and fruit. Its fur is shaggy and tan, and often has a green tint from tiny algae growing in it.',
+  'Two-toed sloths have fewer neck bones than almost any other mammal, just five or six.');
+
+a('Pale-throated sloth', 'Bradypus tridactylus', '🦥', 'Pale-throated_sloth', 'Mammals',
+  ['Rainforest'], ['South America'], 'Herbivore', 'Any time', 'Least Concern', 'Medium',
+  'Up to 60 cm long · 4 kg', 'Around 20 years',
+  'The pale-throated sloth is a three-toed sloth with a creamy-yellow throat and a dark stripe across each eye, like a little bandit’s mask. It lives in the rainforests of northern South America, and eats mostly leaves. Males have a bright orange-yellow patch on their back, with a black stripe down the middle.',
+  'Three-toed sloths can turn their heads almost all the way around, because they have extra neck bones.');
+
+a('Maned sloth', 'Bradypus torquatus', '🦥', 'Maned_sloth', 'Mammals',
+  ['Rainforest'], ['South America'], 'Herbivore', 'Any time', 'Vulnerable', 'Medium',
+  'Up to 75 cm long · 5 kg', 'Around 20 years',
+  'The maned sloth wears a long, dark mane on its neck and shoulders, like a cape. It lives in just one place, the coastal Atlantic Forest of Brazil, and most of that forest has been cut down. These sloths eat the leaves of only a few kinds of trees, and move slowly through the canopy.',
+  'The mane is longer and darker on males, and helps it look like a clump of leaves.');
+
+a('Pygmy three-toed sloth', 'Bradypus pygmaeus', '🦥', 'Pygmy_three-toed_sloth', 'Mammals',
+  ['Wetland'], ['North America'], 'Herbivore', 'Any time', 'Critically Endangered', 'Small',
+  'About 50 cm long · 3 kg', 'Not well known',
+  'The pygmy sloth is smaller than other three-toed sloths, and lives on only one tiny island in the Caribbean Sea, called Escudo de Veraguas, off the coast of Panama. It spends its life in the red mangrove trees that grow along the shore. Scientists think it became a separate species after the island was cut off from the mainland, thousands of years ago.',
+  'Its whole home is an island of about four square kilometres.');
+
+/* ---------- More insects ---------- */
+a('Hercules beetle', 'Dynastes hercules', '🪲', 'Dynastes_hercules', 'Insects',
+  ['Rainforest'], ['North America', 'South America'], 'Herbivore', 'Night', 'Not Evaluated', 'Small',
+  'Up to 17 cm long, with horns', 'Months as an adult',
+  'The male Hercules beetle has two huge horns, one on its head and one on its back, which meet like a pair of pincers. It uses them to wrestle rivals, and to flip them off tree branches. This beetle is one of the longest beetles in the world, and it is also one of the strongest for its size.',
+  'Its wing covers can change colour from greenish-yellow to black in damp air.');
+
+a('European rhinoceros beetle', 'Oryctes nasicornis', '🪲', 'Oryctes_nasicornis', 'Insects',
+  ['Forest', 'Towns & gardens'], ['Europe'], 'Decomposer', 'Night', 'Not Evaluated', 'Tiny',
+  'Up to 4 cm long', 'Grub lives 2–4 years',
+  'The male rhinoceros beetle has a curved horn on its head, like a tiny rhinoceros. The big, pale grubs live for years in rotting wood, sawdust piles and compost heaps. The shiny brown adults come out in summer evenings, and live for only a few weeks.',
+  'The grubs help to turn old wood and garden waste into rich soil.');
+
+a('Luna moth', 'Actias luna', '🦋', 'Actias_luna', 'Insects',
+  ['Forest'], ['North America'], 'Herbivore', 'Night', 'Not Evaluated', 'Tiny',
+  'Wingspan up to 11 cm', 'Adult lives about one week',
+  'The luna moth has pale green wings with long, curved tails and a spot like an eye on each wing. It flies at night in the forests of eastern North America. The adult has no mouth, so it cannot eat. It lives only long enough to find a mate and lay eggs.',
+  'The long tails help to confuse hunting bats.');
+
+a('Blue morpho', 'Morpho menelaus', '🦋', 'Morpho_menelaus', 'Insects',
+  ['Rainforest'], ['South America'], 'Herbivore', 'Day', 'Not Evaluated', 'Tiny',
+  'Wingspan up to 15 cm', 'A few weeks as a butterfly',
+  'The blue morpho is a large butterfly that flashes electric blue as it flaps through the rainforest. The underside of its wings is dull brown with eye spots, so when it lands and closes its wings, it seems to vanish. Adults sip juice from rotting fruit rather than nectar.',
+  'The blue is not a pigment. It comes from tiny ridges on the scales that bounce blue light back.');
+
+a('Painted lady', 'Vanessa cardui', '🦋', 'Vanessa_cardui', 'Insects',
+  ['Grassland', 'Towns & gardens'], ['Africa', 'Asia', 'Europe', 'North America', 'South America', 'Oceania'], 'Herbivore', 'Day', 'Not Evaluated', 'Tiny',
+  'Wingspan up to 7 cm', 'A few weeks as a butterfly',
+  'The painted lady is an orange, black and white butterfly that is found on almost every continent. It is a great traveller. Each spring, whole waves of painted ladies fly north, and in autumn their children fly back south again. They visit thistles, buddleia and many other flowers.',
+  'A migration can cover up to 12,000 kilometres, but takes several generations to complete.');
+
+a('Old World swallowtail', 'Papilio machaon', '🦋', 'Papilio_machaon', 'Insects',
+  ['Wetland', 'Grassland'], ['Europe', 'Asia', 'North America'], 'Herbivore', 'Day', 'Not Evaluated', 'Tiny',
+  'Wingspan up to 9 cm', 'A few weeks as a butterfly',
+  'This big yellow-and-black butterfly has pretty tails on its back wings, and a bright blue and red spot near each tail. Its green caterpillars, striped with black and orange dots, eat plants in the carrot family, such as fennel. The caterpillar can poke out a smelly orange fork from behind its head when it is scared.',
+  'Very young swallowtail caterpillars look just like bird droppings.');
+
+a('Peacock butterfly', 'Aglais io', '🦋', 'Aglais_io', 'Insects',
+  ['Forest', 'Towns & gardens'], ['Europe', 'Asia'], 'Herbivore', 'Day', 'Not Evaluated', 'Tiny',
+  'Wingspan up to 6.5 cm', 'Up to 11 months',
+  'The peacock butterfly has a bright red-brown body and a big blue eyespot on each of its four wings. When a bird comes near, it flashes open its wings and hisses by rubbing them together. It spends the winter asleep in hollow trees, sheds and other sheltered corners, then wakes up in spring.',
+  'Its folded wings are dark and look like a dead leaf, until it flashes open its eyespots.');
+
+a('Indian stick insect', 'Carausius morosus', '🪲', 'Carausius_morosus', 'Insects',
+  ['Rainforest'], ['Asia'], 'Herbivore', 'Night', 'Not Evaluated', 'Tiny',
+  'Up to 10 cm long', '1–2 years',
+  'The Indian stick insect looks just like a thin green or brown twig. By day it stays perfectly still, and sways gently like a twig in the breeze. At night it climbs about and nibbles leaves. Most of these insects are female, and they can lay eggs without ever meeting a male.',
+  'If it loses a leg, a young stick insect can grow a new one when it moults.');
+
+a('Giant leaf insect', 'Phyllium giganteum', '🍃', 'Phyllium_giganteum', 'Insects',
+  ['Rainforest'], ['Asia'], 'Herbivore', 'Night', 'Not Evaluated', 'Tiny',
+  'Females up to 10 cm long', 'About a year',
+  'The giant leaf insect looks just like a green leaf, with flat veined wings and a flat body with ragged “bite marks”. It sways slowly as if the wind were blowing it. The female is bigger than the male and cannot fly. The male is slimmer, and can flutter between trees.',
+  'Even its eggs look like small seeds.');
+
+a('Orchid mantis', 'Hymenopus coronatus', '🦗', 'Hymenopus_coronatus', 'Insects',
+  ['Rainforest'], ['Asia'], 'Insectivore', 'Day', 'Not Evaluated', 'Tiny',
+  'Females up to 7 cm long', 'About a year',
+  'The orchid mantis is pink and white, with legs that look like flower petals. It sits quietly on a plant, and waits for a bee or butterfly to come close, thinking it is a flower. Then it grabs the visitor in a lightning-fast strike. Females are much bigger than males.',
+  'Scientists found that insects often chose the mantis over real flowers.');
+
+a('Sacred scarab', 'Scarabaeus sacer', '🪲', 'Scarabaeus_sacer', 'Insects',
+  ['Grassland', 'Desert'], ['Africa', 'Europe'], 'Decomposer', 'Day', 'Not Evaluated', 'Tiny',
+  'Up to 3.5 cm long', 'A year or two',
+  'This shiny black beetle is a dung beetle. It shapes a ball of animal dung, and rolls it away backwards with its hind legs. It then buries the ball and uses it as food, or as a nursery for its eggs. Ancient Egyptians thought the scarab looked like the sun being rolled across the sky.',
+  'Dung beetles clean up the ground and help to turn dung into soil food.');
+
+a('Army ant', 'Eciton burchellii', '🐜', 'Eciton_burchellii', 'Insects',
+  ['Rainforest'], ['North America', 'South America'], 'Carnivore', 'Any time', 'Not Evaluated', 'Tiny',
+  'Workers 3–12 mm long', 'Workers live a few months',
+  'Army ants do not have a permanent home. Hundreds of thousands march together through the rainforest, in a wide, moving hunting party, and attack almost any small animal in their path. At night they stop and make a living nest, called a bivouac, out of their own bodies.',
+  'Birds follow the swarm to catch the insects that flee from the ants.');
+
+a('Bullet ant', 'Paraponera clavata', '🐜', 'Paraponera_clavata', 'Insects',
+  ['Rainforest'], ['North America', 'South America'], 'Omnivore', 'Night', 'Not Evaluated', 'Tiny',
+  'Up to 3 cm long', 'Not well known',
+  'The bullet ant is one of the biggest ants in the world, and lives in colonies at the base of rainforest trees. It eats nectar and small insects. Its sting is thought to be the most painful of any insect, and it is said to feel like being shot, which is how it got its name.',
+  'The pain from one sting can last for a whole day.');
+
+a('Weaver ant', 'Oecophylla smaragdina', '🐜', 'Oecophylla_smaragdina', 'Insects',
+  ['Rainforest', 'Forest'], ['Asia', 'Oceania'], 'Omnivore', 'Any time', 'Not Evaluated', 'Tiny',
+  'Workers about 1 cm long', 'Colonies last for years',
+  'Weaver ants build their nests high in the trees by sewing leaves together. Some workers pull the edges of the leaves close, forming living chains, while others hold up their own larvae, which make sticky silk, and use them like tiny glue tubes. A single colony can have hundreds of nests.',
+  'Orchard farmers use weaver ants to keep pests off their fruit trees.');
+
+a('Giant termite', 'Macrotermes bellicosus', '🐜', 'Macrotermes_bellicosus', 'Insects',
+  ['Grassland'], ['Africa'], 'Decomposer', 'Any time', 'Not Evaluated', 'Tiny',
+  'Workers 5–10 mm · mounds several metres tall', 'Queens live for many years',
+  'These termites build towering mounds from soil and spit, which can be several metres tall. Inside, they grow gardens of fungus, which they feed with chewed grass and wood. The mound has tunnels that move air in and out, which keeps it cool inside, like air conditioning.',
+  'The mound’s tunnels inspired the design of cool buildings.');
+
+a('Periodical cicada', 'Magicicada septendecim', '🪲', 'Magicicada_septendecim', 'Insects',
+  ['Forest'], ['North America'], 'Herbivore', 'Day', 'Not Evaluated', 'Tiny',
+  'Up to 3 cm long', '17 years',
+  'The periodical cicada spends 17 years underground as a young nymph, sipping sap from tree roots. Then, in one spring, millions of them climb out together, shed their skins, and fill the air with a deafening song. After a few weeks of mating and laying eggs, the adults die.',
+  'The long gap of 17 years, a prime number, may help them dodge predators.');
+
+a('Desert locust', 'Schistocerca gregaria', '🦗', 'Desert_locust', 'Insects',
+  ['Desert', 'Grassland'], ['Africa', 'Asia'], 'Herbivore', 'Day', 'Not Evaluated', 'Tiny',
+  'Up to 6 cm long', 'About 3–5 months',
+  'The desert locust is a grasshopper that can change its behaviour. Usually it lives alone, and is green and shy. After heavy rains, when food is plentiful and the locusts crowd together, they turn yellow and pink, and gather in huge swarms that fly across the land and eat the crops.',
+  'A big swarm can eat as much in a day as thousands of people.');
+
+a('Field cricket', 'Gryllus campestris', '🦗', 'Gryllus_campestris', 'Insects',
+  ['Grassland'], ['Europe'], 'Omnivore', 'Any time', 'Not Evaluated', 'Tiny',
+  'Up to 2.5 cm long', 'About a year',
+  'The field cricket digs a burrow in warm, sunny grassland, and sits at the entrance to sing. The male chirps by rubbing one wing against the other, to attract a female. Its ears are on its front legs, just below the knee.',
+  'It sings louder when it is warm, and the chirps come faster.');
+
+a('Bombardier beetle', 'Brachinus crepitans', '🪲', 'Brachinus_crepitans', 'Insects',
+  ['Grassland', 'Towns & gardens'], ['Europe'], 'Carnivore', 'Night', 'Not Evaluated', 'Tiny',
+  'Up to 1 cm long', 'About a year',
+  'When a bombardier beetle is attacked, it mixes two chemicals in a special chamber at its back end. They react with a pop, and it squirts a spray as hot as boiling water. The beetle can aim this at an ant or a frog. It lives under stones and logs, and hunts at night.',
+  'It can fire many tiny pulses of spray every second.');
+
+a('Common pond skater', 'Gerris lacustris', '🪲', 'Gerris_lacustris', 'Insects',
+  ['Freshwater'], ['Europe', 'Asia'], 'Carnivore', 'Day', 'Not Evaluated', 'Tiny',
+  'Up to 1.8 cm long', 'About a year',
+  'The pond skater walks on water. Its long legs are covered with tiny water-repellent hairs, so it rests on the skin of the water without sinking. It feels the ripples made by insects that have fallen in, skates quickly to them, and sucks out their juices.',
+  'Look closely, and you can see dimples where its feet touch the water.');
+
+a('Great diving beetle', 'Dytiscus marginalis', '🪲', 'Dytiscus_marginalis', 'Insects',
+  ['Freshwater'], ['Europe', 'Asia'], 'Carnivore', 'Any time', 'Not Evaluated', 'Tiny',
+  'Up to 3.5 cm long', '1–3 years',
+  'The great diving beetle is a fierce hunter of ponds. It carries a bubble of air under its wing covers to breathe, and rows through the water with its flat, hairy back legs. It catches tadpoles, small fish and insects. At night it can take off, and fly to a new pond.',
+  'Its babies are called “water tigers” and have big hollow jaws.');
+
+a('Hummingbird hawk-moth', 'Macroglossum stellatarum', '🦋', 'Macroglossum_stellatarum', 'Insects',
+  ['Grassland', 'Towns & gardens'], ['Europe', 'Africa', 'Asia'], 'Herbivore', 'Day', 'Not Evaluated', 'Tiny',
+  'Wingspan about 5 cm', 'A few months',
+  'This moth flies in sunshine, and hovers in front of flowers just like a hummingbird, sipping nectar through a very long tongue. Its wings beat so fast that they make a humming sound. Each spring, some fly from warm southern lands to gardens in the north.',
+  'It can learn to remember which flowers give the most nectar.');
+
+a('Tarantula hawk', 'Pepsis grossa', '🐝', 'Pepsis_grossa', 'Insects',
+  ['Desert'], ['North America', 'South America'], 'Herbivore', 'Day', 'Not Evaluated', 'Small',
+  'Up to 5 cm long', 'A few months as an adult',
+  'The tarantula hawk is a huge wasp with a shiny blue-black body and bright orange wings, a warning colour. The adults sip nectar, but the female hunts tarantulas to feed her young. She stings a tarantula to paralyse it, drags it to a burrow, and lays one egg on it.',
+  'Its sting is one of the most painful of any insect, but it hurts for only a few minutes.');
+
+a('Giant weta', 'Deinacrida rugosa', '🦗', 'Deinacrida_rugosa', 'Insects',
+  ['Forest'], ['Oceania'], 'Herbivore', 'Night', 'Not Evaluated', 'Tiny',
+  'Up to 7 cm long · 30+ g', 'About 2 years',
+  'The giant weta lives in New Zealand, and is one of the heaviest insects in the world. It is a bit like a huge cricket, with long spiny legs, and it hides in holes in trees by day. At night it climbs out to eat leaves, fruit and flowers. In the past, it filled the role of a mouse.',
+  'It is heavier than a house mouse.');
+
+a('European paper wasp', 'Polistes dominula', '🐝', 'Polistes_dominula', 'Insects',
+  ['Towns & gardens', 'Forest'], ['Europe', 'North America'], 'Omnivore', 'Day', 'Not Evaluated', 'Tiny',
+  'Up to 2 cm long', 'Queens live about a year',
+  'The paper wasp chews up old wood and mixes it with spit to make paper. With it she builds a small nest shaped like an upside-down umbrella, with open six-sided cells. Paper wasps catch caterpillars and feed them to their young, so they help to control garden pests.',
+  'Some paper wasps can recognise each other by their faces.');
+
+a('Honeypot ant', 'Myrmecocystus mexicanus', '🐜', 'Myrmecocystus', 'Insects',
+  ['Desert'], ['North America'], 'Omnivore', 'Night', 'Not Evaluated', 'Tiny',
+  'Workers about 1 cm long', 'Colonies last for years',
+  'Honeypot ants live in dry deserts, where food is hard to find. In good times, some workers eat so much nectar that their bellies swell up like grapes. They hang from the ceiling of the nest, as living jars. When food is scarce, the other ants feed from them.',
+  'A swollen honeypot ant cannot walk, so it stays put for months.');
+
+/* ---------- More edible plants ---------- */
+p('Tomato', 'Solanum lycopersicum', '🍅', 'Solanum_lycopersicum', 'Flowers',
+  ['Farms & orchards'], ['South America'], ['Summer'], 'Sunlight & soil', 'Not Evaluated', 'Small',
+  'Up to 2 m tall', '1 year',
+  'The tomato began as a small wild plant in the Andes mountains of South America. Its fruit grows from yellow flowers, and ripens from green to red, yellow or even purple. Tomatoes are a cousin of potatoes, and the leaves and stems are not good to eat.',
+  'Tomatoes are really fruits, even though we eat them like vegetables.',
+  ['Fruit']);
+p('Pumpkin', 'Cucurbita pepo', '🎃', 'Cucurbita_pepo', 'Flowers',
+  ['Farms & orchards'], ['North America'], ['Autumn'], 'Sunlight & soil', 'Not Evaluated', 'Small',
+  'Vines up to 5 m long', '1 year',
+  'Pumpkins grow on sprawling vines with big yellow flowers. The orange fruit ripens in autumn, and the flesh, the seeds and even the flowers can be cooked and eaten. Pumpkins were first grown in Central America thousands of years ago.',
+  'A pumpkin is really a kind of berry, with a thick skin.',
+  ['Fruit', 'Seeds, nuts & grains', 'Flowers']);
+p('Avocado', 'Persea americana', '🥑', 'Persea_americana', 'Trees',
+  ['Farms & orchards', 'Rainforest'], ['North America'], ['All year'], 'Sunlight & soil', 'Not Evaluated', 'Large',
+  'Up to 20 m tall', '100+ years',
+  'The avocado is a tall evergreen tree from Mexico and Central America. Its pear-shaped fruit has creamy flesh around one big, round seed. The skin is thick and bumpy, and turns from green to dark purple on some kinds.',
+  'The huge seed may once have been swallowed whole by giant ground sloths.',
+  ['Fruit']);
+p('Cinnamon tree', 'Cinnamomum verum', '🌿', 'Cinnamomum_verum', 'Trees',
+  ['Rainforest', 'Farms & orchards'], ['Asia'], ['All year'], 'Sunlight & soil', 'Not Evaluated', 'Medium',
+  'Up to 15 m tall, or pruned to a bush', '50+ years',
+  'The cinnamon tree is native to Sri Lanka and southern India. The spice is made from its inner bark, which is peeled off in thin strips. As the strips dry, they curl into rolls called quills. The leaves are also fragrant, and smell of cinnamon when crushed.',
+  'The rolled-up quills of bark are what we call cinnamon sticks.',
+  ['Herbs & spices']);
+p('Tea plant', 'Camellia sinensis', '🍵', 'Camellia_sinensis', 'Trees',
+  ['Mountain', 'Farms & orchards'], ['Asia'], ['All year'], 'Sunlight & soil', 'Not Evaluated', 'Medium',
+  'Up to 5 m tall, kept pruned', '50+ years',
+  'The tea plant is a glossy evergreen shrub with white flowers. Farmers pick the youngest leaves and buds, and these are dried to make tea. It grows best on misty hillsides, where it is warm and wet. Whole slopes in China, India and Sri Lanka are planted in neat rows.',
+  'Green tea, black tea and white tea all come from this one plant.',
+  ['Leaves & greens']);
+p('Wild raspberry', 'Rubus idaeus', '🍓', 'Rubus_idaeus', 'Flowers',
+  ['Forest'], ['Europe', 'Asia'], ['Summer'], 'Sunlight & soil', 'Not Evaluated', 'Small',
+  'Canes up to 2 m tall', 'Canes live 2 years',
+  'The wild raspberry grows in clearings and at the edges of woods. It has thin, prickly canes and white flowers, and in summer they turn into soft red fruits. Each fruit is made up of lots of tiny juicy bobbles, each with its own seed. Birds and bears love them.',
+  'Each raspberry is a cluster of many tiny fruits.',
+  ['Fruit']);
+p('American cranberry', 'Vaccinium macrocarpon', '🍒', 'Vaccinium_macrocarpon', 'Flowers',
+  ['Wetland'], ['North America'], ['Autumn'], 'Sunlight & soil', 'Not Evaluated', 'Tiny',
+  'Vines up to 2 m long', 'Many years',
+  'The cranberry is a low, creeping plant that grows in soggy bogs. Its small red berries are tart, and have little pockets of air inside. In autumn, farmers flood the fields, and the berries bob to the surface in a bright red carpet.',
+  'The air pockets make cranberries float.',
+  ['Fruit']);
+p('Lemon tree', 'Citrus × limon', '🍋', 'Lemon', 'Trees',
+  ['Farms & orchards'], ['Asia'], ['All year'], 'Sunlight & soil', 'Not Evaluated', 'Medium',
+  'Up to 6 m tall', '50+ years',
+  'The lemon tree has shiny leaves and sweet-smelling white flowers. Its bright yellow fruits are very sour, so we squeeze the juice into drinks and cooking, or grate the zest for flavour. It grows best where winters are mild.',
+  'A lemon tree can have flowers and fruit on it at the same time.',
+  ['Fruit']);
+p('Sweet orange', 'Citrus × sinensis', '🍊', 'Orange_(fruit)', 'Trees',
+  ['Farms & orchards'], ['Asia'], ['Winter'], 'Sunlight & soil', 'Not Evaluated', 'Medium',
+  'Up to 9 m tall', '50+ years',
+  'The sweet orange is a round evergreen tree with fragrant flowers. Its round fruit is full of juicy segments, which are ripe in winter. The tree was first grown in southern China thousands of years ago, and is now grown in warm places all over the world.',
+  'In very warm countries, ripe oranges can stay green.',
+  ['Fruit']);
+p('Date palm', 'Phoenix dactylifera', '🌴', 'Phoenix_dactylifera', 'Trees',
+  ['Desert'], ['Africa', 'Asia'], ['All year'], 'Sunlight & soil', 'Not Evaluated', 'Large',
+  'Up to 25 m tall', '100+ years',
+  'The date palm is a tall tree that grows beside oases in hot deserts. Its roots reach deep for water. Big bunches of sweet, sticky dates hang from under its crown of feathery leaves. People have grown date palms for thousands of years.',
+  'A single date palm can give many tens of kilograms of fruit each year.',
+  ['Fruit']);
+p('Pomegranate', 'Punica granatum', '🍎', 'Pomegranate', 'Trees',
+  ['Farms & orchards'], ['Asia'], ['Autumn'], 'Sunlight & soil', 'Least Concern', 'Medium',
+  'Up to 5 m tall', '100+ years',
+  'The pomegranate is a small, spiny tree with bright orange-red flowers. Its round fruit has a tough, leathery skin, and inside are hundreds of seeds, each wrapped in a juicy ruby-red pocket. It grows well in hot, dry summers.',
+  'One pomegranate can hold hundreds of seeds.',
+  ['Fruit']);
+p('Papaya', 'Carica papaya', '🌴', 'Papaya', 'Trees',
+  ['Rainforest', 'Farms & orchards'], ['North America'], ['All year'], 'Sunlight & soil', 'Not Evaluated', 'Medium',
+  'Up to 10 m tall', 'About 20 years',
+  'The papaya has a single slim, hollow trunk topped with a crown of big, lobed leaves. The orange, sweet fruits grow in a bunch just under the leaves. A papaya grows very fast, and can bear fruit in less than a year.',
+  'Papaya juice has a natural substance that can soften meat.',
+  ['Fruit']);
+p('Garden pea', 'Pisum sativum', '🫛', 'Pea', 'Flowers',
+  ['Farms & orchards'], ['Europe', 'Asia'], ['Spring', 'Summer'], 'Sunlight & soil', 'Not Evaluated', 'Tiny',
+  'Vines up to 2 m long', '1 year',
+  'The pea is a climbing plant that holds on to supports with curly tendrils. Its pretty white or purple flowers become pods full of round green peas. The young shoots and tendrils can be eaten too.',
+  'A monk named Gregor Mendel used pea plants to discover how traits are passed on.',
+  ['Seeds, nuts & grains', 'Stems & shoots']);
+p('Spinach', 'Spinacia oleracea', '🥬', 'Spinach', 'Flowers',
+  ['Farms & orchards'], ['Asia'], ['Spring'], 'Sunlight & soil', 'Not Evaluated', 'Tiny',
+  'Up to 30 cm tall', '1 year',
+  'Spinach is a leafy green that first grew in Persia, which is now Iran. It grows best in cool weather, and is ready to pick in just a few weeks. The dark green leaves can be eaten raw in salads or cooked.',
+  'Popeye the Sailor made spinach famous.',
+  ['Leaves & greens']);
+p('Sweet potato', 'Ipomoea batatas', '🍠', 'Sweet_potato', 'Flowers',
+  ['Farms & orchards'], ['North America', 'South America'], ['Autumn'], 'Sunlight & soil', 'Not Evaluated', 'Small',
+  'Vines up to 4 m long', '1 year',
+  'The sweet potato is a trailing vine with heart-shaped leaves and pale purple flowers. The tasty, orange roots swell underground. It has been grown in Central and South America for thousands of years.',
+  'It is not related to the potato, but it is related to morning glory flowers.',
+  ['Roots & tubers', 'Leaves & greens']);
+p('Cassava', 'Manihot esculenta', '🌿', 'Cassava', 'Trees',
+  ['Farms & orchards', 'Rainforest'], ['South America'], ['All year'], 'Sunlight & soil', 'Not Evaluated', 'Medium',
+  'Up to 3 m tall', '1–3 years',
+  'Cassava is a woody shrub with fingered leaves. It grows thick, starchy roots that feed hundreds of millions of people in warm countries. The raw roots contain a poison, so they must be peeled, soaked and cooked before eating.',
+  'Tapioca pearls in bubble tea are made from cassava.',
+  ['Roots & tubers']);
+p('Peanut', 'Arachis hypogaea', '🥜', 'Peanut', 'Flowers',
+  ['Farms & orchards'], ['South America'], ['Summer'], 'Sunlight & soil', 'Not Evaluated', 'Tiny',
+  'Up to 50 cm tall', '1 year',
+  'The peanut plant has small yellow flowers. After the flower dies, its stalk bends over and pushes the young pod underground, where the peanuts ripen in the dark. Peanuts are not true nuts. They belong to the same family as peas and beans.',
+  'The pods grow underground, so peanuts are dug up, not picked.',
+  ['Seeds, nuts & grains']);
+p('Almond', 'Prunus dulcis', '🌸', 'Almond', 'Trees',
+  ['Farms & orchards'], ['Asia'], ['Spring'], 'Sunlight & soil', 'Not Evaluated', 'Medium',
+  'Up to 10 m tall', '50+ years',
+  'The almond tree covers itself with pale pink and white blossom in late winter, before the leaves come out. The fruit looks a bit like a small green peach. Inside its hard shell is the almond, which is the seed. Wild almonds can be bitter and poisonous, and only sweet almonds are safe to eat.',
+  'The almond is a close cousin of the peach and the cherry.',
+  ['Seeds, nuts & grains']);
+p('Soybean', 'Glycine max', '🫘', 'Soybean', 'Flowers',
+  ['Farms & orchards'], ['Asia'], ['Summer'], 'Sunlight & soil', 'Not Evaluated', 'Small',
+  'Up to 1.5 m tall', '1 year',
+  'The soybean is a bushy plant with fuzzy pods and small purple or white flowers. The beans inside are very nutritious. They are used to make tofu, soy milk, soy sauce and tempeh. Young green pods are called edamame.',
+  'Soybean roots add natural plant food to the soil.',
+  ['Seeds, nuts & grains']);
+p('Oats', 'Avena sativa', '🌾', 'Oat', 'Grasses & reeds',
+  ['Farms & orchards', 'Grassland'], ['Europe'], ['Summer'], 'Sunlight & soil', 'Not Evaluated', 'Small',
+  'Up to 1.5 m tall', '1 year',
+  'Oats are grasses with drooping, loose clusters of seeds. They grow well in cool, damp places. The grains are rolled or ground to make porridge, oatcakes and flapjacks, and are also fed to horses.',
+  'Oats were once a weed in wheat fields, before people began to grow them on purpose.',
+  ['Seeds, nuts & grains']);
+p('Saffron crocus', 'Crocus sativus', '🌸', 'Crocus_sativus', 'Flowers',
+  ['Farms & orchards'], ['Asia', 'Europe'], ['Autumn'], 'Sunlight & soil', 'Not Evaluated', 'Tiny',
+  'Up to 20 cm tall', 'Bulbs last for years',
+  'The saffron crocus has lilac flowers in autumn. Inside each flower are three bright red threads. They are picked by hand, dried, and sold as saffron, a golden spice that gives rice and bread a rich yellow colour.',
+  'It takes around 150 flowers to make a single gram of saffron.',
+  ['Herbs & spices']);
+p('Wild fennel', 'Foeniculum vulgare', '🌿', 'Foeniculum_vulgare', 'Flowers',
+  ['Grassland', 'Towns & gardens'], ['Europe'], ['Summer'], 'Sunlight & soil', 'Not Evaluated', 'Medium',
+  'Up to 2.5 m tall', 'Many years',
+  'Wild fennel is a tall plant with feathery leaves and flat clusters of tiny yellow flowers. It tastes and smells a bit like liquorice. The leaves, seeds and stems are all used in cooking, and the seeds are chewed after meals in some countries.',
+  'Swallowtail butterflies lay their eggs on fennel.',
+  ['Herbs & spices', 'Leaves & greens']);
+p('Wood sorrel', 'Oxalis acetosella', '☘️', 'Oxalis_acetosella', 'Flowers',
+  ['Forest'], ['Europe', 'Asia'], ['Spring'], 'Sunlight & soil', 'Not Evaluated', 'Tiny',
+  'Up to 10 cm tall', 'Many years',
+  'Wood sorrel is a small plant of shady woods. It has leaves like three little hearts, and dainty white flowers with purple veins in spring. Its leaves taste lemony and sour, and a few can be nibbled, but too many are not good for you.',
+  'Its leaves fold down at night, like tiny umbrellas.',
+  ['Leaves & greens', 'Flowers']);
+p('Stone pine', 'Pinus pinea', '🌲', 'Pinus_pinea', 'Trees',
+  ['Forest'], ['Europe'], ['All year'], 'Sunlight & soil', 'Least Concern', 'Large',
+  'Up to 25 m tall', '200+ years',
+  'The stone pine has a broad, flat crown like an umbrella. Its big, round cones take about three years to ripen. Inside are pine nuts, which are used in pesto and in many sweets. The tree grows along the Mediterranean coast.',
+  'Each pine nut hides inside a hard shell within the cone.',
+  ['Seeds, nuts & grains']);
+
+/* ---------- More fungi ---------- */
+f('Shiitake', 'Lentinula edodes', '🍄', 'Shiitake', 'Fungi',
+  ['Forest'], ['Asia'], ['Autumn', 'Spring'], 'Decomposer', 'Not Evaluated', 'Small',
+  'Cap 5–10 cm wide', 'A few days',
+  'Shiitake grows on fallen hardwood logs in the forests of East Asia. It has a brown, domed cap with pale gills underneath. It has a rich savoury taste, and has been grown on logs for hundreds of years. Never eat a wild mushroom unless an expert has identified it.',
+  'Dried shiitake have an even stronger flavour than fresh ones.',
+  ['Mushrooms']);
+f('Button mushroom', 'Agaricus bisporus', '🍄', 'Agaricus_bisporus', 'Fungi',
+  ['Grassland', 'Farms & orchards'], ['Europe', 'North America'], ['All year'], 'Decomposer', 'Least Concern', 'Small',
+  'Cap 3–10 cm wide', 'A few days',
+  'The button mushroom is the most common mushroom in shops. It grows in dark sheds on compost. It starts out small and round, with a white cap that hides the gills. If it is left to grow, the cap opens out and turns brown. Never eat a wild mushroom unless an expert has identified it.',
+  'White buttons, brown chestnut mushrooms and big portobellos are all the same kind of mushroom.',
+  ['Mushrooms']);
+f('Chicken of the woods', 'Laetiporus sulphureus', '🍄', 'Laetiporus', 'Fungi',
+  ['Forest'], ['Europe', 'North America'], ['Summer', 'Autumn'], 'Decomposer', 'Not Evaluated', 'Medium',
+  'Shelves up to 50 cm across', 'Months',
+  'Chicken of the woods grows in bright orange and yellow shelves on the sides of old oak and other trees. Young brackets are soft and juicy, and some people cook them because they taste like chicken. It slowly rots the wood of the tree. Never eat a wild mushroom unless an expert has identified it.',
+  'A big cluster can weigh several kilograms.',
+  ['Mushrooms']);
+f('Hen of the woods', 'Grifola frondosa', '🍄', 'Grifola_frondosa', 'Fungi',
+  ['Forest'], ['Asia', 'Europe', 'North America'], ['Autumn'], 'Decomposer', 'Not Evaluated', 'Medium',
+  'Clusters up to 50 cm across', 'Weeks',
+  'Hen of the woods looks like a ruffled bundle of feathers at the base of old oak trees. The frills are grey-brown, and they cluster together into one big rosette. It is known in Japan as maitake, or “dancing mushroom”. Never eat a wild mushroom unless an expert has identified it.',
+  'A story says that people danced with joy when they found it.',
+  ['Mushrooms']);
+f('Enoki', 'Flammulina filiformis', '🍄', 'Flammulina_filiformis', 'Fungi',
+  ['Forest'], ['Asia'], ['Winter'], 'Decomposer', 'Not Evaluated', 'Tiny',
+  'Cap 1–5 cm wide', 'Weeks',
+  'Wild enoki grow in winter on dead and dying trees. They have small, sticky, orange-brown caps. Shop enoki look very different. They are grown in the dark, so they are long, thin and white, and grow in bunches like noodles. Never eat a wild mushroom unless an expert has identified it.',
+  'Growing in darkness makes them pale and long.',
+  ['Mushrooms']);
+f('Wood ear', 'Auricularia auricula-judae', '🍄', 'Auricularia_auricula-judae', 'Fungi',
+  ['Forest'], ['Europe', 'Asia'], ['All year'], 'Decomposer', 'Not Evaluated', 'Small',
+  'Up to 10 cm across', 'Months',
+  'The wood ear is a floppy, jelly-like fungus shaped like an ear. It grows on dead branches, especially elder. It is rubbery and brown, and feels damp. In dry weather it shrivels up, and when rain comes it swells back to life. Never eat a wild mushroom unless an expert has identified it.',
+  'It can dry up hard and then plump up again with rain.',
+  ['Mushrooms']);
+f('Black truffle', 'Tuber melanosporum', '🍄', 'Tuber_melanosporum', 'Fungi',
+  ['Forest'], ['Europe'], ['Winter'], 'Decomposer', 'Not Evaluated', 'Small',
+  'Up to 10 cm wide', 'Months',
+  'The black truffle grows underground, hidden on the roots of oak and hazel trees. It is warty and black on the outside, and smells strongly. Trained dogs sniff them out, and chefs pay a lot for them. Never eat a wild mushroom unless an expert has identified it.',
+  'Truffle is one of the most expensive foods in the world.',
+  ['Mushrooms']);
+f('Parasol mushroom', 'Macrolepiota procera', '🍄', 'Macrolepiota_procera', 'Fungi',
+  ['Grassland', 'Forest'], ['Europe'], ['Summer', 'Autumn'], 'Decomposer', 'Not Evaluated', 'Small',
+  'Cap up to 25 cm wide · up to 40 cm tall', 'Days',
+  'The parasol mushroom has a tall, slim stem patterned like snakeskin, and a big, shaggy cap that opens out like an umbrella. It grows in grassy places and woodland edges. Some poisonous mushrooms look similar. Never eat a wild mushroom unless an expert has identified it.',
+  'It can grow almost as tall as a toddler.',
+  ['Mushrooms']);
+f('Zombie-ant fungus', 'Ophiocordyceps unilateralis', '🍄', 'Ophiocordyceps_unilateralis', 'Fungi',
+  ['Rainforest'], ['Asia', 'South America'], ['All year'], 'Decomposer', 'Not Evaluated', 'Tiny',
+  'Stalk up to 2 cm tall', 'Weeks',
+  'This fungus infects carpenter ants in tropical forests. It makes the ant climb a plant stem and clamp its jaws onto a leaf. Then the ant dies, and a thin stalk grows out of its head and scatters spores onto the ants below.',
+  'The ant tends to bite down at around midday.');
+f('Common stinkhorn', 'Phallus impudicus', '🍄', 'Phallus_impudicus', 'Fungi',
+  ['Forest', 'Towns & gardens'], ['Europe', 'Asia', 'North America'], ['Autumn'], 'Decomposer', 'Not Evaluated', 'Small',
+  'Up to 20 cm tall', 'A day or two',
+  'The stinkhorn begins as a soft white egg in the leaf litter. In a few hours, a spongy stalk pushes out of it, and the top is coated with slimy dark green goo. The goo smells like rotten meat. Flies love it, and carry the spores away on their feet.',
+  'It can shoot up to full height in just a few hours.');
+f('Ghost fungus', 'Omphalotus nidiformis', '🍄', 'Omphalotus_nidiformis', 'Fungi',
+  ['Forest'], ['Oceania'], ['Autumn'], 'Decomposer', 'Not Evaluated', 'Medium',
+  'Cap up to 30 cm wide', 'Weeks',
+  'The ghost fungus grows in clusters on dead trees in southern Australia and Tasmania. In the daytime it looks pale, with smooth, funnel-shaped caps. At night, its gills glow a faint green. It is poisonous, and should never be eaten.',
+  'Scientists think the glow may attract insects that spread its spores.');
+f('Bleeding tooth fungus', 'Hydnellum peckii', '🍄', 'Hydnellum_peckii', 'Fungi',
+  ['Forest'], ['North America', 'Europe'], ['Autumn'], 'Decomposer', 'Not Evaluated', 'Small',
+  'Cap up to 10 cm wide', 'Weeks',
+  'The bleeding tooth fungus grows in cool pine forests. Its young white cap oozes bright red droplets, which look like blood. Underneath, it has tiny soft spines instead of gills. It tastes very bitter, and is not eaten.',
+  'The red drops are sticky sap that the fungus makes.');
+f('Earthstar', 'Geastrum triplex', '🍄', 'Geastrum_triplex', 'Fungi',
+  ['Forest'], ['Europe', 'North America'], ['Autumn'], 'Decomposer', 'Not Evaluated', 'Small',
+  'Up to 10 cm across when open', 'Weeks',
+  'The earthstar begins as a round ball, and then its outer skin splits into pointed arms and peels back like a star. In the middle sits a round puffball full of spores. When raindrops hit it, a cloud of dusty spores shoots out of a little hole in the top.',
+  'Raindrops make the puffball puff out its spores.');
+
+/* =====================================================================
    DEEPER STORIES FOR ANIMALS
    ===================================================================== */
 /* Deeper stories: x(id, superpower, story, [wow facts]) */
 const EXTRA = {};
 function x(id, power, story, wow) { EXTRA[id] = { power, story, wow }; }
+
+/* Kid-friendly versions: k(id, superpower, short story, [2-3 wow facts]) */
+const KID = {};
+function k(id, power, story, wow) { KID[id] = { power, story, wow }; }
 
 x('african-elephant', 'Talking through the ground',
   'Elephants can “hear” with their feet. They make deep rumbles, too low for us to hear, that travel through the ground for kilometres, and other elephants pick them up through the soles of their feet. A herd can warn a distant family of danger, or call to a friend, long before they are in sight. Elephants also seem to mourn. They have been seen gently touching the bones of elephants that died years earlier, and returning to visit them.',
@@ -2608,7 +3045,1103 @@ x('turkey-tail', 'A rainbow shelf on dead wood',
   'Turkey tail grows in layered fans on fallen logs, with bands of brown, blue, orange and cream, like a turkey’s tail. It is a powerful decomposer, one of the main recyclers of dead wood in forests. Unlike many mushrooms, it is tough and leathery, so it is not used for food. But it is used for tea, and researchers are studying its compounds for their immune benefits.',
   ['It is found on every continent except Antarctica.', 'It is one of the most common mushrooms on Earth.', 'Tiny tubes under the shelf release spores.']);
 
-  </script>
+  
+/* ---------- Stories for the newest species ---------- */
+x('linnaeus-s-two-toed-sloth', 'Living life upside down',
+  'This sloth hangs from branches with its long, hooked claws, and its fur even parts along its belly so that rain runs off. It is awake mostly at night, and moves so slowly that it saves energy. Mothers give birth while hanging from a branch, and the baby clings to her belly for months.',
+  ['Its fur grows from belly to back, the opposite of most mammals, so rain drips off.', 'Two-toed sloths have a multi-chambered stomach to digest tough leaves.', 'A sloth can swim well, using a slow breaststroke.']);
+x('hoffmann-s-two-toed-sloth', 'A cool-mountain sloth',
+  'Hoffmann’s sloth is one of the few sloths that lives in cool mountain forests as well as in hot lowlands. Its slow metabolism lets its body temperature vary with the air. It eats leaves, shoots and fruit, and gets most of the water it needs from the food.',
+  ['It has five or six neck bones, fewer than almost any mammal.', 'It can live from sea level up into high mountain forests.', 'It spends most of its life without touching the ground.']);
+x('pale-throated-sloth', 'A mask and a hidden patch',
+  'A three-toed sloth like this one has a face mask and a surprisingly flexible neck, which lets it turn its head almost all the way around. Males have a bright patch on their back that they may use to attract mates. Like its cousins, it climbs down to the ground about once a week.',
+  ['It has three claws on each hand and each foot.', 'Its fur grows algae, which turns it green.', 'Moths live in its fur.']);
+x('maned-sloth', 'A cape of dark hair',
+  'The maned sloth lives only in the coastal Atlantic Forest of Brazil. Most of that forest has been cleared for farms and cities, so this sloth is now threatened. It feeds on a small number of tree species, which makes it hard for it to live in any other forest.',
+  ['Males have a bigger patch of bright fur on their back.', 'It is one of the rarest sloths.', 'Replanting forest corridors may help it move between trees.']);
+x('pygmy-three-toed-sloth', 'The smallest sloth of all',
+  'The pygmy sloth lives only on a tiny island, Escudo de Veraguas, covered in red mangrove trees. Scientists think it became smaller after the island was separated from the mainland thousands of years ago. It sleeps and feeds in the mangrove canopy, and swims well between trees.',
+  ['It is found nowhere else on Earth.', 'Its whole home is about four square kilometres.', 'It is one of the rarest mammals in the Americas.']);
+x('hercules-beetle', 'Horns like giant pincers',
+  'The male Hercules beetle’s long horn is used in wrestling matches over females, and the winner can lift and toss the loser off a branch. The beetle spends most of its life as a fat grub in rotting wood, for up to two years. The adult has only a few months to find a mate.',
+  ['Its colour can change with the humidity.', 'It is one of the longest beetles on Earth.', 'It is very strong for its size.']);
+x('european-rhinoceros-beetle', 'A grub that grows in a compost heap',
+  'The grubs of the rhinoceros beetle can live in compost heaps, rotting stumps and sawdust. They take two to four years to turn into beetles. The adult has a horn, and males use it to push other males away, much like a tiny rhinoceros.',
+  ['The grub is one of the biggest in Europe.', 'The adult mostly does not eat.', 'It is harmless to people.']);
+x('luna-moth', 'No mouth, but a mission',
+  'The luna moth is born without a working mouth. It lives only a week, long enough to find a mate and lay eggs. The long tails on its hind wings spin as it flies, which seems to confuse bats that hunt by echo.',
+  ['Males find females by smelling them from far away.', 'The caterpillar eats walnut, birch and other leaves.', 'The pale green colour hides the moth among leaves.']);
+x('blue-morpho', 'Wings that flash like lightning',
+  'The bright blue on a morpho’s wings is not made by pigment. Tiny ridges on the scales reflect only blue light, much like a soap bubble. When the butterfly flaps, the blue flashes on and off, which may confuse birds. When it lands and folds its wings, the brown underside blends in.',
+  ['The flash can be seen from far away.', 'Caterpillars are covered in bristles.', 'They fly along rainforest streams.']);
+x('painted-lady', 'Crossing continents on tiny wings',
+  'Painted ladies make one of the longest butterfly migrations in the world. They cannot survive a northern winter, so each spring they fly north, breed along the way, and their descendants fly back south in the autumn. Scientists have tracked them flying high above the ground, riding fast winds.',
+  ['The round trip can be up to 12,000 kilometres.', 'It takes several generations to finish.', 'They fly across the Sahara desert.']);
+x('old-world-swallowtail', 'A stink horn on a caterpillar',
+  'When a swallowtail caterpillar is disturbed, it pushes out a bright orange forked organ from behind its head, which smells strong and puts off predators. Young caterpillars are dark and spiny with a white patch, and look like bird droppings. They grow quickly, and shed their skins several times.',
+  ['It lays eggs on fennel, dill and wild carrot.', 'The chrysalis can be green or brown.', 'It is Britain’s largest resident butterfly.']);
+x('peacock-butterfly', 'Hissing eyespots',
+  'When a bird or mouse threatens, the peacock butterfly snaps open its wings to show four large eyespots, and rubs them together to make a hissing sound. Many peacocks spend winter asleep in sheds, hollow trees and log piles, and then come out on the first warm days.',
+  ['Adults can live almost a year.', 'The caterpillars are black and spiky, and feed on nettles.', 'The wings look like a dead leaf when closed.']);
+x('indian-stick-insect', 'Master of disguise',
+  'A stick insect’s greatest trick is staying very still and swaying as if blown by wind. If it is caught, it may drop a leg to escape, or play dead. Females can lay eggs without a male, so a single insect can start a whole new colony.',
+  ['Eggs look like small seeds.', 'It can regrow a lost leg.', 'It is popular as a classroom pet.']);
+x('giant-leaf-insect', 'A walking leaf',
+  'The giant leaf insect’s body is shaped like a leaf, with veins, and even looks as if it has been nibbled. It sways gently as it walks to imitate a leaf in the wind. Its eggs, which look like seeds, are dropped on the forest floor.',
+  ['Female leaf insects are bigger than males.', 'Males are good fliers; females are not.', 'Their colour can vary from green to brown.']);
+x('orchid-mantis', 'A hunter that looks like a flower',
+  'The orchid mantis has flat, petal-shaped legs and a pink and white body. Scientists tested it, and found that insects were often more attracted to the mantis than to real flowers. Young orchid mantises change colour as they grow, from red and black to pink and white.',
+  ['It has been seen to catch bees and butterflies.', 'Females grow much bigger than males.', 'It changes colour to match its flower.']);
+x('sacred-scarab', 'A ball of treasure',
+  'A scarab beetle shapes a ball of dung much bigger than its own head, and rolls it backwards in a straight line. It keeps going, even though other beetles may try to steal the ball. Ancient Egyptians believed that the beetle rolled the sun across the sky each day, and made it a symbol of rebirth.',
+  ['Some dung beetles steer by the Milky Way.', 'They bury dung, which helps the soil.', 'Ancient Egyptians carved scarab amulets.']);
+x('army-ant', 'A moving city of ants',
+  'Army ant colonies can have hundreds of thousands of workers, and they never build a permanent nest. Instead, they march every day to hunt, and at night form a nest, a bivouac, out of their linked bodies, with the queen safe in the middle. After a few weeks, they move on.',
+  ['They can build bridges with their own bodies.', 'They carry their larvae with them.', 'Special birds follow the swarm to catch fleeing insects.']);
+x('bullet-ant', 'The sting heard around the rainforest',
+  'The bullet ant’s sting is rated among the most painful of any insect, and the pain can last for hours. It uses it to defend its nest, which sits at the foot of a tree. Workers climb up the trunk at night to hunt insects and sip nectar.',
+  ['It can be 2.5 cm long.', 'It makes a squeaking sound when it is disturbed.', 'The sting has a special chemical that attacks nerves.']);
+x('weaver-ant', 'Sewing with living thread',
+  'Weaver ants work together to make a nest. Some ants hold the leaf edges together, while others bring larvae and gently squeeze them to make silk, which glues the leaves together. Colonies can have more than a hundred nests in many trees. Farmers in Asia have used them for centuries to guard orchards.',
+  ['They form living chains to reach across gaps.', 'The ants and their eggs are eaten in some countries.', 'A colony can hold half a million ants.']);
+x('giant-termite', 'Air-conditioned towers',
+  'A termite mound is a feat of engineering. The tunnels carry warm stale air up and let cool fresh air in, so the nest stays at a steady temperature. Deep inside, the termites tend fungus gardens, which break down the wood and grass they bring in. A queen lays thousands of eggs.',
+  ['Termite mounds can last for decades.', 'Termites are related to cockroaches.', 'The mounds are home for many other animals.']);
+x('periodical-cicada', 'The 17-year wait',
+  'For 17 years, a cicada nymph lives underground, feeding on sap from tree roots. In the spring of its 17th year, millions come up at once, climb trees, and moult into adults. There are so many that predators cannot eat them all. The males sing loudly in chorus.',
+  ['The song can be as loud as a lawn mower.', 'The empty skins are left clinging to tree trunks.', 'Different groups emerge in different years.']);
+x('desert-locust', 'From shy grasshopper to swarm',
+  'A desert locust changes with crowding. When rains cause plants to grow, the locusts breed and bump into each other, and this makes them gather in groups. Hopping young locusts form bands, and winged adults form swarms that can include billions of insects. A swarm can travel 150 kilometres in a day.',
+  ['A locust can eat its own weight in food each day.', 'Swarms can cover hundreds of square kilometres.', 'Locusts are recorded in ancient writings.']);
+x('field-cricket', 'A singing neighbour',
+  'The male field cricket sings from the entrance to his burrow, rubbing a rough edge on one wing against a ridge on the other. Each chirp is a message to females and a warning to rivals. The cricket’s ears are on its front legs.',
+  ['Crickets chirp faster when it is warm.', 'It digs its own burrow.', 'Females lay eggs in the soil.']);
+x('bombardier-beetle', 'A chemistry set on legs',
+  'Inside the beetle’s abdomen are two chambers holding different chemicals. When threatened, it squirts them into a third chamber, where they react and heat up almost to boiling. The beetle fires the hot spray with a popping sound, aimed at its attacker.',
+  ['The spray can reach nearly 100 degrees Celsius.', 'It can aim in nearly any direction.', 'It fires in rapid pulses.']);
+x('common-pond-skater', 'Walking on water',
+  'Water molecules stick together, forming a thin elastic skin on the surface. The pond skater’s long legs have tiny hairs coated in oil, so they sit on top without sinking. It senses ripples with its legs, and finds its prey by feeling them.',
+  ['Its middle legs row, and its back legs steer.', 'In winter, it hides in the leaf litter.', 'It can jump off the water.']);
+x('great-diving-beetle', 'A bubble of breath',
+  'The great diving beetle carries a bubble of air beneath its wing covers, and breathes from it underwater. It is a fierce hunter. Its larvae, called water tigers, have sharp hollow jaws that inject digestive juice into prey. At night, adult beetles take off and fly to new ponds.',
+  ['It can catch small fish and tadpoles.', 'It must return to the surface for air.', 'Males have special sucker pads on their front legs.']);
+x('hummingbird-hawk-moth', 'The moth that hums',
+  'This moth hovers in front of a flower and unrolls a tongue as long as its body, just like a hummingbird. Its wings beat about 70 times a second. It flies in daylight, and each year some make long journeys north from warm southern lands.',
+  ['It has been seen at flowers in the middle of the day.', 'It can recall which flowers were rich in nectar.', 'It is often mistaken for a tiny bird.']);
+x('tarantula-hawk', 'A wasp that hunts spiders',
+  'The tarantula hawk is a spider wasp. When a female finds a tarantula, she stings and paralyses it, drags it into a burrow, and lays a single egg on its body. The grub that hatches eats the spider. The adult wasps drink nectar, and love flowers.',
+  ['The bright orange wings warn predators.', 'The sting hurts a lot, but only for a few minutes.', 'It is one of the largest wasps.']);
+x('giant-weta', 'The insect that acts like a mouse',
+  'New Zealand had no land mammals except bats before humans arrived, and giant wetas filled the same spots in the forest as mice. They shelter in holes by day, and forage at night. Rats and cats introduced by people now threaten them, so some are kept safe on islands without predators.',
+  ['It is heavier than a house mouse.', 'It is related to crickets and grasshoppers.', 'It is found only in New Zealand.']);
+x('european-paper-wasp', 'Paper makers',
+  'Paper wasps scrape old wood and plant fibres with their jaws, mix them with spit, and spread the paste into thin paper. The nest looks like a hanging umbrella with open, six-sided cells. The wasps feed their young on chewed caterpillars.',
+  ['A nest begins with one queen.', 'Wasps can recognise nestmates.', 'They keep many garden pests in check.']);
+x('honeypot-ant', 'Living jars of nectar',
+  'In the desert, flowers bloom only after rain, so honeypot ants collect nectar when it is available and store it inside special workers called repletes. Their stomachs swell until they are as round as grapes. In a dry spell, the other workers tap them for a drink.',
+  ['Repletes hang from the ceiling of the nest.', 'Colonies may last for decades.', 'Ants stay underground during the hottest part of the day.']);
+x('tomato', 'A fruit disguised as a vegetable',
+  'The wild ancestors of tomatoes had berries the size of peas. Over centuries, growers in Central America bred bigger, tastier ones. When tomatoes reached Europe in the 1500s, many people feared them because the plant belongs to the nightshade family.',
+  ['There are thousands of kinds of tomato.', 'A tomato plant can climb on a support.', 'Tomatoes ripen faster when they are near ripe bananas.']);
+x('pumpkin', 'The giant berry',
+  'Pumpkins are one of the oldest crops in the Americas. They grew alongside corn and beans in a group of crops called the three sisters. Each plant has both male and female flowers, and bees visit to carry the pollen. The seeds are roasted and eaten.',
+  ['Some giant pumpkins weigh over a tonne.', 'Pumpkin flowers can be cooked and eaten.', 'Pumpkins are carved into lanterns at Halloween.']);
+x('avocado', 'A seed built for a giant',
+  'The avocado’s seed is so big that most animals today cannot swallow it whole. Scientists think that giant ground sloths and other huge animals ate the fruit and spread the seeds. Today, people have taken over this job.',
+  ['A ripe avocado is soft and creamy.', 'The tree can reach 20 metres tall.', 'The fruit ripens after it is picked.']);
+x('cinnamon-tree', 'Bark that curls into a spice',
+  'To harvest cinnamon, workers peel the outer bark from young shoots and scrape the soft inner bark. As it dries, it curls into long quills. Cinnamon was once so prized that it was traded across oceans, and wars were fought over it.',
+  ['Cinnamon was used in ancient Egypt.', 'The leaves also smell of cinnamon.', 'Sri Lanka is famous for true cinnamon.']);
+x('tea-plant', 'One plant, many teas',
+  'Green, black, white and oolong tea all come from the same plant. The difference is how the leaves are treated after picking. Black tea is left to darken, while green tea is heated quickly to keep it green. Tea is the world’s most popular drink after water.',
+  ['The best tea is made from the top two leaves and the bud.', 'Tea plants can grow into trees if not pruned.', 'Tea was first drunk in China thousands of years ago.']);
+x('wild-raspberry', 'Bobbles with a seed each',
+  'A raspberry is a cluster of tiny fruits called drupelets, each with a seed inside. When it is ripe, it pulls off the plant, leaving a hollow core. Wild raspberries are smaller than the ones in shops, but often taste sweeter.',
+  ['Raspberries have hairs on their fruits.', 'Bears and birds eat them.', 'The canes fruit in their second year.']);
+x('american-cranberry', 'A berry that floats',
+  'Cranberries grow on low vines in damp, acid bogs. Air pockets inside the berries make them float, so growers flood the bog and use machines to knock the berries off. They float to the surface in a red carpet. They are tart, so they are often cooked with sugar.',
+  ['Cranberries were used by Native Americans for food and dye.', 'They can bounce when fresh.', 'The vines can live for many decades.']);
+x('lemon-tree', 'Sour but sunny',
+  'The lemon probably came from a cross between a citron and a sour orange. It flowers several times a year. The juice is rich in citric acid, which gives it a sour taste, and the peel has oil that smells fresh and clean.',
+  ['Lemons float in water.', 'Sailors once took lemons on long voyages.', 'The zest is used to flavour cakes.']);
+x('sweet-orange', 'Gold in a tree',
+  'Sweet oranges were bred from a cross between a pomelo and a mandarin. The fruit’s skin is full of oil glands, which spray a fragrant mist when you peel it. In the tropics, where nights stay warm, the skin of a ripe orange can stay green.',
+  ['Orange trees can bear fruit for decades.', 'Oranges were once rare treats.', 'The blossoms smell wonderful.']);
+x('date-palm', 'A tree that feeds the desert',
+  'Date palms thrive where it is hot and dry, as long as their roots reach water. Male and female flowers grow on different trees, so growers often pollinate by hand. Dates are very sweet and keep for a long time, which made them a perfect food for desert travellers.',
+  ['A date palm can live for over a hundred years.', 'The leaves have been used to make baskets and roofs.', 'People have grown dates for about 5,000 years.']);
+x('pomegranate', 'A jewel box fruit',
+  'Inside a pomegranate are hundreds of seeds, each wrapped in sweet, juicy pulp. The tree has been grown since ancient times in Persia and around the Mediterranean. The flowers look like small red trumpets.',
+  ['The fruit has a crown on the top.', 'It appears in many old stories.', 'The juice stains deep red.']);
+x('papaya', 'A tree that grows like a weed',
+  'The papaya grows quickly, and can fruit within a year of planting. The trunk is hollow, and the plant is really a giant herb rather than a true tree. The milky juice of the green fruit contains an enzyme that breaks down proteins, used to tenderise meat.',
+  ['Papaya seeds are peppery.', 'Fruit can be as big as a football.', 'A tree may have male, female or both kinds of flowers.']);
+x('garden-pea', 'The plant that taught us about genes',
+  'In the 1800s, a monk named Gregor Mendel grew thousands of pea plants and tracked how traits like flower colour and seed shape passed from parent to child. His experiments laid the foundation of modern genetics. Peas have been eaten for about ten thousand years.',
+  ['Pea tendrils curl around supports.', 'Peas like cool weather.', 'Peas add natural plant food to the soil.']);
+x('spinach', 'A leafy green with a famous fan',
+  'Spinach arrived in Europe from Persia more than a thousand years ago. It grows best in cool seasons, and goes to seed quickly in the heat. It became world-famous when the cartoon Popeye ate cans of it to get strong.',
+  ['Baby spinach is picked young.', 'Spinach can be eaten raw or cooked.', 'Its leaves shrink a lot when cooked.']);
+x('sweet-potato', 'A root with a secret cousin',
+  'The sweet potato is a close relative of morning glories, not of potatoes. It was carried across the Pacific long ago, and is now grown all over the world. The roots can be orange, white or purple. The leaves are also edible.',
+  ['It is one of the most important crops in many countries.', 'The flowers look like morning glories.', 'It stores well, and gets sweeter with storage.']);
+x('cassava', 'Food from a poisonous root',
+  'Cassava roots are packed with starch and grow in poor soil, so the plant feeds hundreds of millions of people. But raw cassava contains a poison, and it takes careful peeling, soaking and cooking to make it safe. Tapioca is made from cassava starch.',
+  ['It is a staple food in much of Africa.', 'Cassava can survive drought.', 'The leaves can be cooked, too.']);
+x('peanut', 'A pod that buries itself',
+  'After the peanut flower is pollinated, a stalk called a peg grows down and pushes the tiny pod into the soil, where it grows. This is why peanuts are dug up rather than picked. Peanuts are legumes, like peas and lentils.',
+  ['Peanuts are also called groundnuts.', 'They add plant food to the soil.', 'Peanut butter was popularised in the 1900s.']);
+x('almond', 'A seed from a peach cousin',
+  'Almond orchards flower in late winter, with a haze of pink and white. Bees are brought in to pollinate. The edible almond is the seed inside the hard stone of the fruit. Bitter almonds contain a chemical that turns to cyanide, so only sweet almonds are sold.',
+  ['Almonds belong to the rose family.', 'Orchards need millions of bees.', 'Almond milk is made from ground almonds.']);
+x('soybean', 'The bean with a thousand uses',
+  'Soybeans were first grown in East Asia thousands of years ago. They are used for tofu, soy sauce, miso, tempeh and soy milk. They are also a major animal feed. Like other beans, their roots host bacteria that add natural plant food to the soil.',
+  ['Edamame are young soybeans in the pod.', 'They contain lots of protein.', 'Soy has been eaten for over 3,000 years.']);
+x('oats', 'From weed to breakfast',
+  'Oats began as a weed growing among wheat and barley. Over time, farmers noticed they grew well in cool, wet places, where wheat did poorly, and started to plant them on purpose. They are now eaten as porridge and in biscuits.',
+  ['Oat grains hang from fine stalks.', 'Oats are good for horses.', 'Rolled oats are steamed and flattened.']);
+x('saffron-crocus', 'The golden threads',
+  'Each saffron flower has three red threads called stigmas. They are picked by hand in the early morning, and dried carefully. It takes about 150 flowers for one gram of saffron, which makes it the most expensive spice by weight.',
+  ['The crocus cannot reproduce by seed. It only spreads by bulbs.', 'Saffron has been used for over 3,000 years.', 'A little goes a long way.']);
+x('wild-fennel', 'A feast for caterpillars',
+  'Wild fennel tastes of aniseed, and all of it can be eaten. Many insects love it. Swallowtail butterflies lay their eggs on it, and the stripy caterpillars munch the leaves. Hoverflies and bees visit the flowers.',
+  ['It can grow 2.5 metres tall.', 'It grows along coasts and roadsides.', 'Fennel seeds are used in sausages and bread.']);
+x('wood-sorrel', 'A shamrock that sleeps',
+  'Wood sorrel’s three-part leaves fold down at night and in strong sun, as if the plant were sleeping. The leaves taste lemony because of a natural acid. Some think this is the true shamrock of Ireland.',
+  ['The seed pods can flick seeds away.', 'It grows in deep shade.', 'The flowers close in the evening.']);
+x('stone-pine', 'The umbrella pine',
+  'Stone pines have wide, flat crowns shaped like umbrellas, a familiar sight along Mediterranean coasts. Their cones take about three years to ripen. Pine nuts are extracted by cracking the hard shell. The trees have been planted for their nuts for thousands of years.',
+  ['The nuts are used to make pesto.', 'The roots go deep into sandy soil.', 'The wood of old trees is used for ship masts.']);
+x('shiitake', 'The savoury log mushroom',
+  'Shiitake grows naturally on dead hardwood logs, and has been grown on logs in Asia for about a thousand years. Farmers drill holes into logs and push in the fungus. It tastes rich and meaty.',
+  ['Dried shiitake are very strongly flavoured.', 'They can be grown on logs at home.', 'It is one of the most popular mushrooms in the world.']);
+x('button-mushroom', 'One mushroom, three names',
+  'The same kind of mushroom is sold as white button, brown chestnut or crimini, and big portobello, depending on its age and colour. Commercial growers raise them in dark rooms on beds of compost. They are picked before the cap opens.',
+  ['It grows in the dark.', 'It is the most widely grown mushroom.', 'Portobellos are simply mature mushrooms.']);
+x('chicken-of-the-woods', 'A shelf that tastes like chicken',
+  'Chicken of the woods is bright and unmistakable, with orange and yellow brackets stacked on a tree. When young, it is soft and juicy, and some people say it tastes like chicken. It slowly decays heartwood. Some people are sensitive to it, so it should only be eaten after being identified.',
+  ['It can regrow in the same place every year.', 'It is also called sulphur shelf.', 'Insects like to eat it.']);
+x('hen-of-the-woods', 'The dancing mushroom',
+  'Maitake grows as a big, frilly rosette at the base of oak trees, and can return to the same spot year after year. In Japan, it is called “dancing mushroom”, and a legend tells that people danced for joy on finding one.',
+  ['It can grow very large.', 'It is cooked in soups and stir-fries.', 'It grows from a tree’s roots.']);
+x('enoki', 'Noodles from the dark',
+  'Wild enoki have short stems and small sticky caps. The pale, long ones in shops are grown in the dark, in tubes, so they stretch up looking for light. They stay white because no light reaches them.',
+  ['It grows in winter in the wild.', 'It has a crunchy texture.', 'Always cook it before eating.']);
+x('wood-ear', 'A jelly ear',
+  'The wood ear’s rubbery cap feels like a real ear. It can dry up to a hard flake in dry weather, then swell up again within hours of rain. It is common in Asian soups and stir-fries.',
+  ['It likes to grow on elder.', 'It is used in hot-and-sour soup.', 'Its name refers to an old story about Judas.']);
+x('black-truffle', 'Hidden treasure underground',
+  'Truffles grow underground, linked to the roots of certain trees, and swap nutrients with them. They give off a strong smell that animals can detect, which helps spread their spores. Truffle hunters use trained dogs to find them. They are very rare and costly.',
+  ['Pigs were once used to find truffles.', 'They grow in special orchards.', 'The smell is strong and earthy.']);
+x('parasol-mushroom', 'The tall umbrella',
+  'The parasol mushroom pops up fast. It begins as a drumstick shape, and the cap opens out like an umbrella. The stem has a pattern like snakeskin, and a ring that can slide up and down. It is delicious, but there are dangerous lookalikes.',
+  ['It can be 40 centimetres tall.', 'Only the cap is eaten.', 'It grows in fields and open woods.']);
+x('zombie-ant-fungus', 'The puppet master',
+  'Carpenter ants infected by this fungus leave their nest and climb a plant, then clamp onto a leaf and die. The fungus grows through the ant’s body and sprouts from its head. Researchers found that the fungus takes over the ant’s muscles, not its brain.',
+  ['The ants often bite onto the underside of a leaf.', 'Some ants have defences against it.', 'The fungus can be found in tropical forests.']);
+x('common-stinkhorn', 'The stinky speed-grower',
+  'A stinkhorn starts as a rubbery white egg. Within hours, the egg bursts and a hollow stalk pushes out. The sticky green cap smells like something dead, and flies visit it, then spread the spores in their droppings and on their feet.',
+  ['It can be smelled from many metres away.', 'Slugs also feed on it.', 'The eggs look like small puffballs.']);
+x('ghost-fungus', 'A fungus that glows',
+  'Some fungi make light through a chemical reaction. The ghost fungus glows a pale green, easy to see in complete darkness. Scientists are not sure why. They think it may attract insects that help to spread spores.',
+  ['The glow is dim but real.', 'It grows on dead trees.', 'It is poisonous.']);
+x('bleeding-tooth-fungus', 'The fungus that “bleeds”',
+  'On a young bleeding tooth fungus, red drops of liquid form on the top of the cap. The liquid is sap, a mix of water and chemicals that the fungus pushes out. The mushroom is bitter and tough, and nobody eats it.',
+  ['The drops disappear as the mushroom ages.', 'It grows in pine forests.', 'It teams up with tree roots.']);
+x('earthstar', 'A star that puffs',
+  'When the outer skin of an earthstar splits and peels back, it forms a star. The puffball in the middle sits on top of it. When a raindrop hits the ball, it squeezes out a puff of spores, which the wind carries away.',
+  ['Some earthstars lift themselves up on their arms.', 'The spores are like fine dust.', 'The star can close up again in dry weather.']);
+
+/* =====================================================================
+   KID-FRIENDLY VERSIONS (short sentences, simple words)
+   ===================================================================== */
+/* ---------- Mammals ---------- */
+k('african-elephant', 'Hearing with its feet',
+  'The African elephant is the biggest animal that walks on land. It uses its long trunk like a hand, a nose, a straw and a hose all in one. Elephants live in families, and the oldest mom is the boss.',
+  ['Elephants can feel rumbles in the ground through their feet.', 'A baby elephant has to learn how to use its trunk.']);
+k('lion', 'A roar you can hear for miles',
+  'Lions are the only big cats that live in big families called prides. The mom lions hunt together as a team. The dad lions guard the pride, and lions sleep a lot, up to twenty hours a day!',
+  ['A lion’s roar can be heard from about eight kilometres away.', 'Lion cubs are born with spots that fade as they grow.']);
+k('giraffe', 'The tallest animal in the world',
+  'A giraffe is taller than a house door, and even taller than most rooms! Its super long neck lets it nibble leaves at the very top of the trees. Its purple-black tongue is about as long as your arm.',
+  ['A giraffe has the same number of neck bones as you: seven.', 'Every giraffe has its own pattern of spots.']);
+k('plains-zebra', 'Stripes that confuse flies',
+  'Zebras look like horses in pajamas. Scientists think the stripes make it hard for biting flies to land. When a herd runs together, the stripes blur and may confuse hungry lions.',
+  ['Every zebra has its own stripe pattern, like your fingerprint.', 'A baby zebra can walk just minutes after it is born.']);
+k('hippopotamus', 'Making its own sunscreen',
+  'A hippo spends the day in the water to stay cool. Its skin makes a reddish, oily liquid that may work like sunscreen. At night it comes out to munch on grass.',
+  ['A hippo can hold its breath for several minutes.', 'Hippos are really fast runners on land, even though they look heavy.']);
+k('cheetah', 'The fastest runner on land',
+  'The cheetah can run faster than a car on a country road. Its long skinny tail helps it steer, like a rudder on a boat. But it gets very tired, and has to rest after a sprint.',
+  ['A cheetah can go from zero to very fast in just a few seconds.', 'Cheetahs chirp like birds instead of roaring.']);
+k('meerkat', 'Taking turns as a guard',
+  'Meerkats live in big family groups called mobs. One meerkat stands tall on guard, and barks if it sees danger. The others dig for bugs, and then they swap jobs.',
+  ['Meerkats stand up on two legs like little people.', 'Grown-ups teach the babies how to eat scorpions safely.']);
+k('mountain-gorilla', 'A gentle giant with a quiet voice',
+  'Gorillas are the biggest apes in the world, but they are gentle. They live in families led by a big male called a silverback. Gorillas eat lots of plants and build a fresh nest of leaves each night.',
+  ['Gorillas hum when they are happy.', 'A silverback has silver hair on his back.']);
+k('bornean-orangutan', 'A new bed every night',
+  'Orangutans live high up in the trees in the rainforest. Every night, they build a new nest of branches to sleep in. The name orangutan means “person of the forest.”',
+  ['Orangutans use big leaves like umbrellas when it rains.', 'Babies stay with their moms for around seven years.']);
+k('ring-tailed-lemur', 'Stink fights with its tail',
+  'Lemurs live only on the island of Madagascar. A ring-tailed lemur has a long tail with black and white stripes. Males have stink fights, where they wave their smelly tails at each other.',
+  ['Lemurs sunbathe with their arms out and tummies to the sun.', 'The tail has thirteen or so rings.']);
+k('tiger', 'Stripes like fingerprints',
+  'The tiger is the biggest cat in the world. Its stripes are different on every tiger, just like your fingerprints. Most cats hate water, but tigers love to swim.',
+  ['A tiger’s stripes are even on its skin, not just its fur.', 'A tiger’s roar can be heard from far away.']);
+k('giant-panda', 'A bear that eats bamboo',
+  'Giant pandas are bears, but they eat mostly bamboo. They spend about half the day munching. A panda has a special wrist bump that works a bit like a thumb to hold the bamboo.',
+  ['A baby panda is tiny, as small as a stick of butter.', 'Pandas eat for many hours each day.']);
+k('red-panda', 'Wearing its tail like a blanket',
+  'The red panda has a fluffy, striped tail. It wraps the tail around itself like a warm blanket when it sleeps. It lives in trees in the mountains and eats bamboo.',
+  ['It is not closely related to the giant panda.', 'It has a special thumb-like wrist bone, too.']);
+k('snow-leopard', 'A big cat with a built-in scarf',
+  'The snow leopard lives in the cold, rocky mountains of Asia. Its thick fur and long fluffy tail keep it warm. It wraps its tail around its face like a scarf when it sleeps.',
+  ['A snow leopard can leap as far as a bus is long.', 'It cannot roar. It makes a soft puff instead.']);
+k('brown-throated-sloth', 'A fur coat with plants growing in it',
+  'A sloth hangs upside down in the rainforest trees. It moves so slowly that green algae grows in its fur. That makes it hard to see among the leaves.',
+  ['A sloth comes down only about once a week.', 'Sloths can swim!']);
+k('capybara', 'Everyone’s best friend',
+  'The capybara is the biggest rodent in the world. It loves to swim and relax in the water. Other animals, like birds and monkeys, often sit on its back.',
+  ['A capybara can stay underwater for several minutes.', 'Baby capybaras can run and swim soon after birth.']);
+k('jaguar', 'A bite that cracks a turtle shell',
+  'Jaguars are big cats that live in the jungle. Unlike most cats, they like the water and are good swimmers. They have a super strong bite that can crack a turtle’s shell.',
+  ['Jaguars have spots shaped like roses.', 'Some jaguars are all black.']);
+k('koala', 'Sleeping most of the day',
+  'Koalas live in eucalyptus trees in Australia. They eat only eucalyptus leaves, which do not give much energy, so koalas sleep up to twenty hours a day. A koala is not a bear. It is a marsupial.',
+  ['A koala’s fingerprints look a lot like human ones.', 'A baby koala is called a joey.']);
+k('red-kangaroo', 'Hopping on springs',
+  'The red kangaroo is the biggest kangaroo. Its strong back legs work like springs, so it can bounce across the desert. A baby kangaroo, called a joey, rides in mom’s pouch.',
+  ['A newborn kangaroo is about the size of a jellybean.', 'A kangaroo can hop faster than most people can ride a bike.']);
+k('platypus', 'Hunting with its eyes shut',
+  'The platypus is a very strange animal. It has a duck-like bill, a beaver-like tail and webbed feet. It lays eggs, even though it is a mammal.',
+  ['Its bill can sense tiny electric signals from prey.', 'Platypus babies drink milk that oozes from mom’s skin.']);
+k('polar-bear', 'Black skin under white fur',
+  'The polar bear lives in the freezing Arctic. Its fur looks white, but its skin underneath is black, and soaks up the warm sunshine. It is a great swimmer, and hunts seals on the ice.',
+  ['A polar bear’s fur is really see-through.', 'Its paws are big like paddles for swimming.']);
+k('grey-wolf', 'Howling to say hello',
+  'Wolves live in families called packs. They howl to say where they are, and to keep the family together. Each wolf’s howl is a little different.',
+  ['A wolf can smell things from far away.', 'Wolf pups are born deaf and blind.']);
+k('red-fox', 'Pouncing like a ninja',
+  'A red fox has a long, bushy tail and sharp ears. When it hunts mice, it listens carefully, and then leaps high into the air to pounce. Scientists think foxes can even sense the Earth’s magnetic field.',
+  ['Foxes can hear a mouse squeaking under the snow.', 'Foxes make many different sounds, like barks and screams.']);
+k('moose', 'The biggest deer, and a diver',
+  'The moose is the biggest kind of deer in the world. The males grow huge antlers, which fall off each winter and grow back each spring. Moose are great swimmers, and sometimes dive underwater for plants.',
+  ['A moose’s antlers can be as wide as a bed.', 'Moose love to wade into lakes.']);
+k('western-european-hedgehog', 'Rolling into a spiky ball',
+  'A hedgehog is covered in about six thousand spines. When it is scared, it curls into a tight, prickly ball. At night it hunts for slugs, worms and beetles in the garden.',
+  ['Baby hedgehogs have soft spines at first.', 'Hedgehogs sleep through the winter.']);
+k('common-pipistrelle', 'Seeing with sound',
+  'The pipistrelle is a tiny bat that weighs about as much as a coin. It flies at night and makes squeaks that are too high for people to hear. The echoes show where the bugs are.',
+  ['One bat can eat thousands of tiny insects in a night.', 'Bats are the only mammals that can truly fly.']);
+k('blue-whale', 'The biggest animal ever',
+  'The blue whale is the biggest animal that has ever lived. It is longer than two buses. And yet it eats tiny shrimp-like animals called krill.',
+  ['Its tongue can weigh as much as an elephant.', 'A blue whale’s call is one of the loudest sounds made by an animal.']);
+k('bottlenose-dolphin', 'Whistling its own name',
+  'Dolphins are smart, playful animals. Each dolphin has its own special whistle that works like a name. They live in groups called pods, and they work as a team to catch fish.',
+  ['Dolphins sleep with half of their brain at a time.', 'They can leap high out of the water.']);
+k('sea-otter', 'Holding hands while it sleeps',
+  'Sea otters float on their backs in the ocean. Mothers and pups hold hands while they sleep so they do not drift apart. Sea otters use rocks like tools to crack open shellfish.',
+  ['A sea otter has the thickest fur of any animal.', 'Some otters keep a favorite rock in a pocket of skin.']);
+k('walrus', 'Tusks like ice picks',
+  'The walrus has two long tusks, and a bristly mustache. It uses its tusks to pull itself out of the icy water onto the ice. Walruses dive to the bottom of the sea to find clams.',
+  ['Walruses can grow tusks up to a metre long.', 'They pile up on the ice in big, noisy groups.']);
+k('harbour-seal', 'Swimming from day one',
+  'Harbour seals have round faces and big dark eyes. They sunbathe on rocks and beaches, and dive underwater to catch fish. A baby seal can swim within hours of being born.',
+  ['A seal’s whiskers can feel tiny ripples from a fish.', 'Seals can hold their breath for a long time.']);
+k('brown-bear', 'Eating for the winter',
+  'Brown bears eat as much as they can in the autumn, so they have plenty of fat for the winter. Then they sleep in a cozy den for months. Some brown bears stand in rivers and catch leaping salmon.',
+  ['A bear can smell food from many kilometres away.', 'Baby bears are born tiny, in the den, in winter.']);
+k('american-bison', 'The giant of the prairie',
+  'The American bison is the biggest land animal in North America. It has a big hump and a shaggy coat. Bison use their huge heads like snowplows to push snow away to reach the grass.',
+  ['A bison can run faster than a person can ride a bike.', 'Millions of bison once roamed the prairies.']);
+k('reindeer', 'Eyes that change color',
+  'Reindeer, also called caribou, live in the cold north. Both boys and girls grow antlers, which is unusual for deer. Their eyes change from gold in summer to blue in winter.',
+  ['Their hooves click when they walk.', 'Reindeer can travel very far to find food.']);
+k('arctic-fox', 'A coat that changes with the seasons',
+  'The Arctic fox lives in the snowy north. Its fur is white in winter, so it hides in the snow, and brown in summer. It has furry paws and small ears to keep warm.',
+  ['It can stay warm in very cold weather.', 'An Arctic fox can follow polar bears to eat their leftovers.']);
+k('fennec-fox', 'Ears like giant radar dishes',
+  'The fennec fox is the smallest fox in the world. It lives in the hot desert, and has huge ears. The ears help it hear bugs underground, and also let heat escape so it stays cool.',
+  ['Furry feet protect it from hot sand.', 'It sleeps in a cool burrow during the day.']);
+k('raccoon', 'Hands that feel everything',
+  'Raccoons have a black mask and a ringed tail. Their front paws are like little hands, and they feel for food in the water. They often seem to wash their food.',
+  ['A raccoon’s paws are very sensitive.', 'Raccoons can open jars and latches.']);
+k('red-squirrel', 'Burying nuts and forgetting',
+  'Red squirrels climb and jump through the trees. They bury nuts and seeds to eat later, but they forget some. Those forgotten seeds grow into new trees!',
+  ['A squirrel uses its bushy tail for balance.', 'It builds a ball-shaped nest called a drey.']);
+k('eurasian-beaver', 'The river’s builder',
+  'Beavers build dams out of sticks and mud. The dam makes a pond, and in the pond the beaver builds a cozy home called a lodge. A beaver’s teeth never stop growing, so it gnaws wood to keep them short.',
+  ['Beaver teeth are orange.', 'A beaver’s flat tail slaps the water to warn others.']);
+k('chimpanzee', 'Using tools like us',
+  'Chimpanzees are very smart. They use sticks to fish termites out of mounds, and rocks to crack nuts. They live in groups and groom each other to be friends.',
+  ['Chimpanzees share about 98 out of 100 parts of our DNA.', 'They make different faces to show how they feel.']);
+k('giant-anteater', 'A tongue like a whip',
+  'The giant anteater has a long snout and a very long sticky tongue. It flicks its tongue in and out about 150 times a minute to slurp up ants and termites. It has no teeth at all.',
+  ['It can eat thousands of ants in a day.', 'Its fluffy tail works like a blanket.']);
+k('common-wombat', 'Making square poop',
+  'The wombat is a chubby Australian animal that digs burrows. Its back end is tough like armor, so it can block the tunnel from enemies. And its poop is shaped like little cubes!',
+  ['Wombats stack cube poop to mark where they live.', 'A wombat’s pouch faces backward so dirt stays out.']);
+k('tasmanian-devil', 'A very strong bite',
+  'The Tasmanian devil lives on an island in Australia. It is about the size of a small dog, and has a super strong bite. It makes loud screeches that sound scary.',
+  ['It can eat bones and fur.', 'A baby devil is smaller than a jellybean when it is born.']);
+k('asian-elephant', 'A trunk for everything',
+  'Asian elephants are a little smaller than African elephants, with smaller ears. Their trunk can pick up a tiny seed or lift a log. They eat plants for most of the day.',
+  ['An elephant can eat over a hundred kilograms of plants a day.', 'Elephants spray water over themselves to cool off.']);
+k('white-rhinoceros', 'A gentle grazer',
+  'The white rhino is the second biggest land animal. It is really grey, not white. It has a wide mouth to munch grass like a lawn mower, and it has two horns.',
+  ['A baby rhino is called a calf.', 'Rhinos love to roll in the mud.']);
+k('black-rhinoceros', 'A fast, nimble rhino',
+  'The black rhino is smaller than the white rhino, with a pointed lip to pluck leaves from bushes. For its size, it is fast and can turn quickly. There are few of them, and people are working hard to protect them.',
+  ['A black rhino can run very fast over short distances.', 'Oxpecker birds sit on rhinos and eat ticks.']);
+k('leopard', 'Dinner in a tree',
+  'The leopard is a strong, sneaky cat with spots. It can carry an animal bigger than itself up a tree, to keep it safe from lions and hyenas. Leopards live in forests and grasslands.',
+  ['Leopards are great climbers.', 'Their spots are shaped like rosettes.']);
+k('spotted-hyena', 'The laughing hunter',
+  'The spotted hyena makes a sound like a giggle when it is excited. Hyenas live in large groups called clans. The girl hyenas are bigger and stronger than the boys, and they are in charge.',
+  ['A hyena’s jaws are strong enough to crunch bones.', 'Hyenas are great hunters, not just scavengers.']);
+k('okapi', 'The forest giraffe',
+  'The okapi is a shy cousin of the giraffe. It has zebra stripes on its legs and a long purple tongue. Okapis hide so well in the rainforest that scientists did not know about them until 1901.',
+  ['An okapi can clean its own ears with its tongue.', 'It lives in only one country, Congo.']);
+k('common-warthog', 'Kneeling to eat',
+  'The warthog has warts on its face and curved tusks. It often kneels on its front legs to eat grass. At night it sleeps in a burrow, and backs in tail first, ready to dash out if there is danger.',
+  ['Warthogs run with their tails straight up.', 'They roll in mud to stay cool.']);
+k('ground-pangolin', 'A suit of armor',
+  'The pangolin is covered in hard scales, like a pine cone. When scared, it rolls into a tight ball. It has a long sticky tongue to lick up ants and termites, and it has no teeth.',
+  ['Pangolin scales are made of the same stuff as your fingernails.', 'It is the only mammal covered in scales.']);
+k('linnaeus-s-two-toed-sloth', 'Sleeping upside down',
+  'This sloth has two long claws on each front foot. It hangs upside down in the trees. It sleeps most of the day, and wakes at night to eat leaves and fruit.',
+  ['Its fur grows from belly to back, so rain drips off.', 'It has three toes on its back feet.']);
+k('hoffmann-s-two-toed-sloth', 'A sloth for cool mountains',
+  'Hoffmann’s sloth lives in forests from warm lowlands to cool, misty mountains. It moves very slowly and eats leaves and fruit. Sometimes green algae grows in its fur.',
+  ['It has only five or six neck bones.', 'It can swim.']);
+k('pale-throated-sloth', 'A sloth with a bandit mask',
+  'This sloth has three toes on each foot and a dark stripe over each eye, like a mask. It lives in the rainforest and eats leaves. Boy sloths have an orange patch on their backs.',
+  ['It can turn its head almost all the way around.', 'It spends nearly all its life in the trees.']);
+k('maned-sloth', 'A sloth with a mane',
+  'The maned sloth has long, dark hair on its neck, like a lion’s mane. It lives in just one place, the Atlantic Forest in Brazil. Much of that forest has been cut down, so this sloth needs help.',
+  ['Boy sloths have a patch of bright fur on the back.', 'It eats only a few kinds of leaves.']);
+k('pygmy-three-toed-sloth', 'The smallest sloth of all',
+  'The pygmy sloth lives only on one tiny island near Panama. It lives in mangrove trees by the sea, and it is smaller than other three-toed sloths. There are not many left, so people are working to keep it safe.',
+  ['Its island is about four square kilometres big.', 'It is a good swimmer.']);
+
+/* ---------- Birds ---------- */
+k('bald-eagle', 'Eyes four times sharper than ours',
+  'The bald eagle is a huge bird of prey with a white head and a yellow beak. It can spot a fish from very far away. It builds a giant nest of sticks, and adds to it every year.',
+  ['An eagle’s nest can weigh as much as a car.', 'Bald eagles are not bald. “Bald” is an old word for white.']);
+k('barn-owl', 'Silent wings and super hearing',
+  'The barn owl has a heart-shaped face that works like a satellite dish for sound. It can find a mouse in total darkness, just by listening. Its soft feathers let it fly without a sound.',
+  ['Barn owls swallow mice whole.', 'They screech instead of hooting.']);
+k('emperor-penguin', 'Surviving the coldest winter',
+  'Emperor penguins are the biggest penguins. They live in Antarctica, the coldest place on Earth. Dad penguins keep the egg warm on top of their feet for about two months, while mom goes to sea to find food.',
+  ['Penguins huddle together to keep warm.', 'Dad does not eat for about two months.']);
+k('scarlet-macaw', 'A beak like a nutcracker',
+  'The scarlet macaw is a big, bright parrot with red, yellow and blue feathers. Its strong beak can crack open hard nuts. Macaws are loud, and they screech to talk to each other.',
+  ['Macaws can live for 50 years or more.', 'They often fly in pairs.']);
+k('greater-flamingo', 'Pink because of dinner',
+  'Flamingos are born grey. They turn pink from the tiny shrimp and algae they eat. They stand on one leg, and eat with their beaks upside down in the water.',
+  ['A flamingo can stand on one leg for hours.', 'Flamingos make “milk” for their chicks in their throats.']);
+k('peregrine-falcon', 'The fastest animal on Earth',
+  'The peregrine falcon dives at more than 320 kilometres an hour. That is faster than a race car! It dives from high up to catch other birds in mid-air.',
+  ['Peregrines now live in cities, nesting on tall buildings.', 'They have special bumps in their noses to help them breathe while diving.']);
+k('ruby-throated-hummingbird', 'Wings that hum and hover',
+  'The ruby-throated hummingbird is tiny, and flaps its wings very fast. It can hover in front of a flower and even fly backwards. It slurps sweet nectar with a long tongue.',
+  ['Its heart beats over a thousand times a minute.', 'It flies across the Gulf of Mexico in one trip.']);
+k('ostrich', 'The fastest runner on two legs',
+  'The ostrich is the biggest bird in the world, but it cannot fly. Instead it runs, up to 70 kilometres an hour. Its eggs are the biggest of any bird.',
+  ['An ostrich egg is as big as two dozen chicken eggs.', 'Ostriches have the biggest eyes of any land animal.']);
+k('atlantic-puffin', 'A clown-colored beak',
+  'The puffin has a bright orange beak and a black-and-white body. It is a great swimmer that flaps its wings underwater. A puffin can hold lots of little fish in its beak at once.',
+  ['A puffin’s beak gets bright in spring and dull in winter.', 'Puffins nest in burrows.']);
+k('european-robin', 'A tiny bird with a big attitude',
+  'The robin has a bright orange-red chest. Robins are brave and defend their patch of garden. They sing even in winter, and sometimes at night near street lamps.',
+  ['A robin may attack its own reflection.', 'Robins like to follow gardeners and eat the worms they dig up.']);
+k('wandering-albatross', 'Gliding for days',
+  'The wandering albatross has the longest wings of any bird, as wide as a small car is long. It glides on the wind over the ocean for hours without flapping. It can circle the globe!',
+  ['An albatross can live for over fifty years.', 'Pairs do a dancing show for each other.']);
+k('common-kingfisher', 'A beak like a bullet train',
+  'The kingfisher is a small, bright blue bird that sits by rivers. It dives headfirst into the water to catch a fish. The shape of its beak helped designers build Japan’s fast bullet trains.',
+  ['It digs its nest in a riverbank.', 'It tosses a fish against a branch before eating it.']);
+k('mute-swan', 'Partners for life',
+  'Swans are big white birds that often stay with the same partner for life. They build a huge nest of reeds by the water. Baby swans, called cygnets, are grey and ride on their parents’ backs.',
+  ['Cygnets turn white as they grow up.', 'Swans can fly very fast.']);
+k('snowy-owl', 'Hunting in daylight',
+  'The snowy owl is a big white owl that lives in the Arctic. Its thick feathers cover even its toes, like winter socks. Unlike most owls, it hunts in the daytime.',
+  ['The males are almost pure white.', 'Snowy owls were in the Harry Potter books.']);
+k('toco-toucan', 'A beak like an air conditioner',
+  'The toco toucan has a huge orange beak that is light because it is mostly hollow. The beak helps it reach fruit on thin branches. It also gives off heat to keep the bird cool.',
+  ['Its beak is about a third of its body length.', 'Toucans toss fruit into the air and catch it.']);
+k('north-island-brown-kiwi', 'A bird that sniffs for dinner',
+  'The kiwi is a fluffy brown bird from New Zealand that cannot fly. It has a long beak with nostrils on the end, to sniff out worms under the ground. It comes out at night.',
+  ['A kiwi’s egg is huge for its size.', 'Kiwi feathers feel like fur.']);
+k('shoebill', 'A statue that strikes',
+  'The shoebill is a huge bird with a beak shaped like a big shoe. It stands as still as a statue for hours in the swamp, then strikes at a fish. It looks a little like a dinosaur!',
+  ['A shoebill can stand over a metre tall.', 'It claps its beak to make a sound.']);
+k('blue-tit', 'A tiny acrobat',
+  'The blue tit is a small, colorful bird with a blue cap. It hangs upside down from twigs while it hunts for bugs. It can see colors that we cannot, called ultraviolet.',
+  ['Blue tits lay lots of eggs, up to a dozen.', 'They love peanut feeders in gardens.']);
+k('common-raven', 'One of the smartest birds',
+  'Ravens are big, black, clever birds. They can solve puzzles and remember faces. Some ravens even copy human words.',
+  ['Ravens may hold a grudge against people who were mean to them.', 'They play games, like sliding down snowy hills.']);
+k('laughing-kookaburra', 'A laugh at sunrise',
+  'The kookaburra is an Australian bird whose call sounds like laughing. A family sings together at dawn and dusk to tell others, “This is our home!” It eats insects, lizards and even snakes.',
+  ['Kookaburras are the biggest kingfishers.', 'Their laugh is famous around the world.']);
+k('sandhill-crane', 'A dancing bird',
+  'Sandhill cranes are tall grey birds with red caps. They dance by bowing, jumping and flapping their wings. They fly in huge flocks and honk loudly.',
+  ['Cranes dance at any time of year, even when they’re not courting.', 'They migrate thousands of kilometres.']);
+k('great-blue-heron', 'Fishing in slow motion',
+  'The great blue heron is a tall wading bird with long legs and a long neck. It stands very still in the shallow water, then spears a fish with a lightning-fast stab. It can swallow a fish whole.',
+  ['It folds its neck into an S shape when it flies.', 'Herons nest in big groups called colonies.']);
+k('mallard', 'The wild duck behind farm ducks',
+  'The mallard is the duck you see in ponds and parks. The male has a shiny green head. Most farm ducks came from the wild mallard.',
+  ['Ducklings can swim as soon as they hatch.', 'Only the female duck quacks loudly.']);
+
+/* ---------- Reptiles ---------- */
+k('komodo-dragon', 'A very strong sniffer',
+  'The Komodo dragon is the biggest lizard in the world. It flicks its forked tongue to smell food from far away. It lives on a few islands in Indonesia.',
+  ['A Komodo dragon can swallow huge bites of food.', 'Baby dragons climb trees to stay safe from adults.']);
+k('green-sea-turtle', 'Finding its way home',
+  'Green sea turtles swim across the ocean, but a mom comes back to the same beach where she was born to lay her eggs. Baby turtles hatch at night and rush to the sea. Green turtles eat sea grass.',
+  ['A turtle might travel thousands of kilometres to lay eggs.', 'They can stay underwater for hours while resting.']);
+k('aldabra-giant-tortoise', 'The island gardener',
+  'The Aldabra giant tortoise is one of the biggest tortoises in the world. It lives on islands in the Indian Ocean. It eats plants, and spreads seeds in its poop, like a gardener.',
+  ['Some giant tortoises live over 100 years.', 'They rest in the mud to cool off.']);
+k('veiled-chameleon', 'A tongue like a spring',
+  'The veiled chameleon has a tall crest on its head. Its eyes can look in two directions at once. Its sticky tongue shoots out super fast to catch a bug.',
+  ['Chameleons change color to show their mood.', 'Its tongue can be as long as its body.']);
+k('saltwater-crocodile', 'The biggest reptile on Earth',
+  'The saltwater crocodile is the biggest reptile in the world. It can swim in the sea and travel long distances. It has the strongest bite ever measured.',
+  ['A croc’s eyes and nose sit on top of its head so it can hide in the water.', 'It can live for 70 years.']);
+k('king-cobra', 'A snake that builds a nest',
+  'The king cobra is the longest venomous snake in the world. It spreads a hood when it feels threatened. The mom builds a nest of leaves for her eggs.',
+  ['It can rise up high, tall as a person.', 'It mostly eats other snakes.']);
+k('green-anaconda', 'The heaviest snake',
+  'The green anaconda is the heaviest snake in the world. It lives in swamps and rivers in South America. It is a great swimmer, and its eyes sit on top of its head.',
+  ['Anacondas give birth to live babies.', 'It squeezes its prey, rather than biting with venom.']);
+k('leatherback-sea-turtle', 'The deep-diving turtle',
+  'The leatherback is the biggest sea turtle. It does not have a hard shell, but soft, leathery skin. It dives deeper than most whales to find jellyfish to eat.',
+  ['It can swim in cold water that other turtles avoid.', 'Leatherbacks have been around since the dinosaurs.']);
+k('marine-iguana', 'The lizard that swims in the sea',
+  'The marine iguana lives on the Galapagos Islands. It is the only lizard that feeds in the sea. It dives to eat seaweed, then sunbathes on warm rocks.',
+  ['It sneezes out extra salt.', 'It can dive for several minutes.']);
+k('thorny-devil', 'Drinking through its skin',
+  'The thorny devil is a spiky desert lizard from Australia. Tiny channels in its skin carry water to its mouth. It eats thousands of ants.',
+  ['It has a fake head on the back of its neck to fool enemies.', 'It walks with a funny rocking motion.']);
+k('gharial', 'A snout for fishing',
+  'The gharial is a crocodile with a very long, thin snout full of sharp teeth. It swishes the snout sideways to catch slippery fish. Male gharials have a bump on their snouts that makes buzzing sounds.',
+  ['It is one of the longest crocodiles.', 'There are very few gharials left.']);
+k('nile-crocodile', 'A caring mom',
+  'The Nile crocodile lives in rivers in Africa. The mom guards her eggs for about three months. When the babies peep from inside their eggs, she helps dig them out and carries them to the water in her mouth.',
+  ['A mother croc is very gentle with her babies.', 'Crocs have been around since the time of dinosaurs.']);
+
+/* ---------- Amphibians ---------- */
+k('red-eyed-tree-frog', 'A startling flash of color',
+  'The red-eyed tree frog sleeps all day with its bright colors hidden. If a snake wakes it, it flashes its big red eyes and orange feet. That surprise gives it a moment to escape.',
+  ['Its eggs can hatch early to escape danger.', 'Its sticky toes help it climb leaves.']);
+k('axolotl', 'Regrowing body parts',
+  'The axolotl is a smiling salamander from Mexico that stays in the water all its life. It can regrow lost legs, and even parts of its heart and brain. It has feathery gills on its head.',
+  ['Axolotls are nearly gone from the wild.', 'Some are pink, some are dark, some are golden.']);
+k('golden-poison-frog', 'Small but very poisonous',
+  'The golden poison frog is smaller than your thumb, but one of the most poisonous animals in the world. Its bright color warns “don’t eat me!” Its poison comes from the bugs it eats in the wild.',
+  ['It stays safe from its own poison.', 'People once rubbed darts on frogs like this.']);
+k('fire-salamander', 'A warning in black and yellow',
+  'The fire salamander has bright yellow spots on black skin. The bright colors warn hungry animals that it tastes bad. It hides under logs by day, and comes out in the rain.',
+  ['Mom puts her babies in a stream.', 'It is slow-moving but safe, because of its poison.']);
+k('common-toad', 'A trip to the pond',
+  'Common toads have bumpy brown skin, and walk instead of hopping. Each spring, toads travel to the same pond where they were born. They lay long strings of eggs in the water.',
+  ['A toad can live for many years.', 'People help toads cross roads with buckets.']);
+k('american-bullfrog', 'A voice like a bull',
+  'The American bullfrog is a big frog with a deep croak that sounds like a bull. It lives in ponds and lakes. A bullfrog tadpole can take up to three years to grow into a frog.',
+  ['Bullfrogs eat almost anything that fits in their mouths.', 'Only the males croak loudly.']);
+k('chinese-giant-salamander', 'The biggest amphibian',
+  'The Chinese giant salamander is the biggest amphibian in the world. It can grow as long as a grown-up person is tall. It lives in cold mountain streams, and hunts at night.',
+  ['It has been around for millions of years.', 'It is now very rare.']);
+
+/* ---------- Fish ---------- */
+k('great-white-shark', 'A sixth sense for electricity',
+  'The great white is a huge shark and a great hunter. It can sense the tiny electric signals that other animals make. It has rows and rows of teeth, and new ones grow in when old ones fall out.',
+  ['Sharks have been around longer than trees.', 'A great white can smell a drop of blood from far away.']);
+k('whale-shark', 'The biggest fish eats tiny food',
+  'The whale shark is the biggest fish in the world, as long as a bus! Even so, it eats tiny plankton by filtering them from the water. Each whale shark has its own spot pattern.',
+  ['It is gentle and harmless to people.', 'Its mouth can be over a metre wide.']);
+k('ocellaris-clownfish', 'Safe in a stinging home',
+  'Clownfish live in sea anemones, which have stinging tentacles. The clownfish has a special slime that protects it. In return, it cleans and guards the anemone.',
+  ['All clownfish are born boys, and the biggest one becomes the girl.', 'Finding Nemo made them famous.']);
+k('lined-seahorse', 'Dads that have the babies',
+  'The seahorse is a fish with a horse-shaped head and a curly tail. It holds on to seaweed with its tail. The dad carries the babies in a pouch and gives birth to them!',
+  ['Seahorses swim upright.', 'Each eye can look in a different direction.']);
+k('giant-oceanic-manta-ray', 'Flying through the sea',
+  'The giant manta ray looks as if it is flying through the water. It flaps its wide wings, and can be as wide as a small boat. It eats tiny plankton.',
+  ['Mantas have the biggest brains of any fish.', 'They like to get cleaned by small fish.']);
+k('atlantic-salmon', 'Finding home by smell',
+  'The Atlantic salmon is born in a river and swims to the sea. When it grows up, it swims all the way back to the river where it was born. It finds its way by smell.',
+  ['Salmon leap up waterfalls.', 'A salmon can swim thousands of kilometres.']);
+k('ocean-sunfish', 'A fish that is mostly head',
+  'The ocean sunfish is a giant, round fish that looks like a swimming head. It lies on its side near the surface to soak up sunshine. It eats jellyfish.',
+  ['It can weigh as much as a car.', 'A female can lay hundreds of millions of eggs.']);
+k('electric-eel', 'A living battery',
+  'The electric eel is not truly an eel. It makes electricity to stun its prey, with a zap strong enough to light up a string of bulbs. It must come to the surface to breathe air.',
+  ['It can make a zap of hundreds of volts.', 'It lives in muddy rivers in South America.']);
+k('regal-blue-tang', 'A school of blue',
+  'The regal blue tang is a bright blue fish with a black pattern and a yellow tail. It lives on coral reefs, and nibbles algae off the rocks. It has a tiny, sharp spine near its tail to protect itself.',
+  ['Dory in Finding Nemo was a blue tang.', 'They swim in groups.']);
+k('red-bellied-piranha', 'Not the movie monster',
+  'The red-bellied piranha has sharp teeth like little scissors. It lives in rivers in South America. Piranhas mostly eat fish, plants and bugs, and are really quite shy.',
+  ['They swim in groups for safety.', 'They lose and regrow their teeth.']);
+k('great-hammerhead', 'A head like a metal detector',
+  'The great hammerhead is a big shark with a flat head shaped like a hammer. The wide head helps it sense prey buried in the sand. Rays are its favorite food.',
+  ['Its eyes are on the ends of its head.', 'It is very rare.']);
+
+/* ---------- Insects ---------- */
+k('monarch-butterfly', 'A tiny traveler with a map',
+  'The monarch butterfly is orange with black lines. Every fall, millions fly thousands of kilometres to warm forests in Mexico. No one butterfly makes the whole round trip. It takes several generations.',
+  ['Monarch caterpillars eat only milkweed.', 'Monarchs find their way using the sun.']);
+k('western-honey-bee', 'A dance that gives directions',
+  'Honey bees live in hives with thousands of bees. When a bee finds flowers, she dances to tell the others where to go. The queen lays all the eggs.',
+  ['One worker bee makes only a tiny drop of honey in her whole life.', 'Bees fly millions of flower trips to make a jar of honey.']);
+k('emperor-dragonfly', 'The air force of the pond',
+  'The emperor dragonfly is a big blue and green insect. It can hover, fly backwards and zoom after bugs. Its babies live underwater for up to two years before they grow wings.',
+  ['Dragonflies were flying before the dinosaurs.', 'Its eyes are made of thousands of tiny lenses.']);
+k('leafcutter-ant', 'Farming before humans',
+  'Leafcutter ants carry pieces of leaves like green sails. They do not eat the leaves. They use them to grow a fungus garden that is their food.',
+  ['An ant can carry a leaf bigger than its body.', 'A colony can have millions of ants.']);
+k('seven-spot-ladybird', 'A bright warning',
+  'The ladybird, or ladybug, is a little red beetle with seven black spots. The bright color warns birds that it tastes bad. A ladybird loves to eat aphids that harm plants.',
+  ['A ladybird can eat dozens of aphids in a day.', 'Ladybirds sleep together in winter.']);
+k('atlas-moth', 'Wings like snakes',
+  'The atlas moth is one of the biggest moths in the world. The tips of its wings look like snake heads. The adult has no mouth, and lives for only a week or two.',
+  ['Its wings can be as wide as a dinner plate.', 'The caterpillar eats lots of leaves to store energy.']);
+k('common-eastern-firefly', 'Flashing to say hello',
+  'Fireflies are beetles that glow in the dark. They flash a pattern to find a mate. Their light is almost cold, with very little heat.',
+  ['Each kind of firefly has its own flash pattern.', 'Baby fireflies glow too, and are called glowworms.']);
+k('european-mantis', 'A patient ambusher',
+  'The praying mantis holds its front legs up as if it were praying. In fact, it waits for a bug to come close, and then grabs it in a flash. It can turn its head to look over its shoulder.',
+  ['A mantis hears with an ear on its chest.', 'They stay still for a long time.']);
+k('stag-beetle', 'Wrestling with antlers',
+  'The stag beetle has huge jaws shaped like a stag’s antlers. Boy beetles use them to wrestle each other. The babies live in rotting wood for several years.',
+  ['A pile of logs in the garden can be a home for them.', 'The adult lives for just a few weeks.']);
+k('buff-tailed-bumblebee', 'Shaking pollen loose',
+  'The bumblebee is a big fuzzy bee. It grabs a flower and shakes it with its wing muscles to get the pollen out. Only the queen survives the winter.',
+  ['Bumblebees can fly in cold weather, thanks to their fuzzy coat.', 'Tomatoes need this buzz to make fruit.']);
+k('goliath-beetle', 'A heavyweight champion',
+  'The goliath beetle is one of the heaviest insects in the world. It can be as big as your palm. The babies are big, fat grubs that live in rotting wood.',
+  ['It lives in the rainforests of Africa.', 'The grubs grow very big and heavy.']);
+k('hercules-beetle', 'Horns like giant pincers',
+  'The male Hercules beetle has two huge horns that meet like pincers. He uses them to wrestle other males. It is one of the longest beetles in the world, with horns included.',
+  ['Its color can change with the damp.', 'It spends most of its life as a fat grub in rotting wood.']);
+k('european-rhinoceros-beetle', 'A horned wrestler',
+  'The rhinoceros beetle has a curved horn on its head, like a tiny rhinoceros. The grubs live for years in compost heaps and rotting wood. The beetle is harmless to people.',
+  ['The grub is big and plump.', 'The beetle appears on summer evenings.']);
+k('luna-moth', 'A moth with no mouth',
+  'The luna moth has pale green wings with long, curvy tails. The adult has no mouth, so it cannot eat. It lives only about a week, to find a mate and lay eggs.',
+  ['Its tails may confuse hungry bats.', 'It flies at night.']);
+k('blue-morpho', 'Wings that flash blue',
+  'The blue morpho is a big butterfly that shines electric blue. The blue comes from tiny ridges on its wings that bounce back blue light. When it lands and closes its wings, it turns brown and seems to vanish.',
+  ['Its wings have no blue paint at all.', 'It sips juice from rotting fruit.']);
+k('painted-lady', 'A world traveler',
+  'The painted lady is an orange, black and white butterfly. It lives on almost every continent, and makes super long trips. It takes several generations to finish one big journey.',
+  ['It can travel up to 12,000 kilometres.', 'It flies across the Sahara.']);
+k('old-world-swallowtail', 'A smelly horn on a caterpillar',
+  'The swallowtail is a big yellow and black butterfly with little tails. Its green caterpillar can push out an orange, smelly fork when scared. Baby caterpillars look like bird poop, so birds leave them alone.',
+  ['The caterpillar eats fennel and wild carrot.', 'It is the biggest butterfly in Britain.']);
+k('peacock-butterfly', 'Hissing eyespots',
+  'The peacock butterfly has four big eyespots on its wings. When a bird comes close, it flashes the spots and hisses. When its wings are closed, it looks like a dead leaf.',
+  ['It sleeps through the winter in sheds and hollow trees.', 'Its caterpillars eat nettles.']);
+k('indian-stick-insect', 'A twig that walks',
+  'The stick insect looks just like a twig. It stays very still and sways like a twig in the wind. It comes out at night to eat leaves.',
+  ['If it loses a leg, it can grow a new one.', 'Girls can lay eggs without a boy.']);
+k('giant-leaf-insect', 'A walking leaf',
+  'The leaf insect looks exactly like a green leaf, with veins and even “bite marks.” It sways like a leaf in the breeze. Even its eggs look like seeds.',
+  ['Girl leaf insects are bigger than boys.', 'Boys can fly, but girls cannot.']);
+k('orchid-mantis', 'Looks like a flower',
+  'The orchid mantis is pink and white, and looks like an orchid flower. Bees and butterflies come near, thinking it is a flower, and the mantis grabs them. The girl is much bigger than the boy.',
+  ['Scientists found that bugs liked the mantis more than real flowers.', 'Babies are red and black.']);
+k('sacred-scarab', 'The dung roller',
+  'The scarab beetle rolls a ball of animal dung with its back legs, walking backward. It buries the ball for food or for its eggs. Ancient Egyptians thought the beetle rolled the sun across the sky.',
+  ['It helps clean up the ground.', 'Some dung beetles find their way using the stars.']);
+k('army-ant', 'A marching army',
+  'Army ants have no home. Hundreds of thousands march together through the rainforest, hunting bugs. At night they make a nest out of their own bodies.',
+  ['They make bridges from their own bodies.', 'Birds follow them to catch the bugs they scare up.']);
+k('bullet-ant', 'The most painful sting',
+  'The bullet ant is a big ant that lives in the rainforest. Its sting is thought to be the most painful of any insect. People say it feels like being shot, which is how it got its name.',
+  ['The pain can last for a whole day.', 'It nests at the base of trees.']);
+k('weaver-ant', 'Sewing leaves with ant silk',
+  'Weaver ants make nests by sewing leaves together. Some ants pull the leaves close with their bodies. Others squeeze their babies, which make sticky silk, like tiny glue sticks.',
+  ['They form chains with their bodies.', 'Farmers use them to guard fruit trees.']);
+k('giant-termite', 'Towers with air conditioning',
+  'Termites build tall mounds of mud as high as a room. Inside, tunnels move air to keep the nest cool. They grow a fungus garden to eat.',
+  ['Termite mounds inspired cool building designs.', 'A queen termite lays thousands of eggs.']);
+k('periodical-cicada', 'The 17-year wait',
+  'This cicada lives underground for 17 years. Then all at once, millions climb out, shed their skins and sing loudly. After a few weeks of mating, they die.',
+  ['Its song can be as loud as a lawn mower.', 'Empty skins cling to tree trunks.']);
+k('desert-locust', 'From shy grasshopper to giant swarm',
+  'The desert locust is a grasshopper. Usually it lives alone. But when it rains and there are lots of locusts, they gather in huge swarms and eat crops.',
+  ['A swarm can have billions of locusts.', 'They can fly 150 kilometres in a day.']);
+k('field-cricket', 'A singing neighbor',
+  'The field cricket digs a burrow in sunny grass. The boy sings by rubbing his wings together. Its ears are on its front legs, just below its knees.',
+  ['It chirps faster when it is warm.', 'It digs its own burrow.']);
+k('bombardier-beetle', 'A chemistry set on legs',
+  'The bombardier beetle squirts a hot, stinky spray at attackers. It mixes two chemicals in a little chamber in its back end. They pop and heat up, almost to boiling.',
+  ['It can aim the spray.', 'It sprays in tiny pulses, like a machine gun.']);
+k('common-pond-skater', 'Walking on water',
+  'The pond skater walks on water. Its legs have tiny water-proof hairs, so it does not sink. It feels ripples to find bugs that fall in.',
+  ['You can see little dimples under its feet.', 'It can jump off the water.']);
+k('great-diving-beetle', 'A bubble of air',
+  'The diving beetle carries a bubble of air under its wing covers, so it can breathe underwater. It is a fierce hunter of ponds. Its babies, called water tigers, have big jaws.',
+  ['It can catch tadpoles and small fish.', 'It can fly from pond to pond.']);
+k('hummingbird-hawk-moth', 'A moth that hums like a bird',
+  'This moth hovers in front of flowers just like a hummingbird. It drinks nectar through a long tongue. Its wings beat so fast that they hum.',
+  ['It is often mistaken for a tiny bird.', 'It flies in the sunshine.']);
+k('tarantula-hawk', 'A wasp that hunts spiders',
+  'The tarantula hawk is a big wasp with bright orange wings. The mom wasp stings a tarantula so it cannot move, drags it to a burrow, and lays an egg on it. Her baby eats the spider.',
+  ['The sting is painful, but only for a few minutes.', 'Grown-ups drink flower nectar.']);
+k('giant-weta', 'The insect that acts like a mouse',
+  'The giant weta lives in New Zealand and is one of the heaviest insects in the world. It looks like a giant cricket. It hides in holes by day, and comes out at night to eat.',
+  ['It is heavier than a mouse.', 'Long ago, there were no mice in New Zealand.']);
+k('european-paper-wasp', 'Paper makers',
+  'Paper wasps chew wood and mix it with spit to make paper. They build a nest shaped like an upside-down umbrella. They feed their babies chewed-up caterpillars.',
+  ['A nest starts with one queen.', 'Some wasps can tell each other apart by their faces.']);
+k('honeypot-ant', 'Living honey jars',
+  'In the desert, honeypot ants store food inside special workers. These ants swell up with nectar until they are as round as grapes. They hang from the ceiling like jars, and feed the others when food is scarce.',
+  ['A swollen ant cannot walk.', 'They hang in the nest for months.']);
+
+/* ---------- Arachnids and sea animals ---------- */
+k('european-garden-spider', 'An engineer in silk',
+  'The garden spider spins a round web with silk from its body. It sits in the middle and waits for a fly to get stuck. Many spiders eat their old web and spin a new one each night.',
+  ['Spider silk is stronger than steel of the same thickness.', 'A spider has eight legs and eight eyes.']);
+k('emperor-scorpion', 'A glow in the dark',
+  'The emperor scorpion is a big, shiny black scorpion with strong claws. Under a black light, it glows blue-green. Moms carry their babies on their backs.',
+  ['It uses its claws, more than its sting, to catch food.', 'It sleeps in a burrow during the day.']);
+k('goliath-birdeater', 'The giant of spiders',
+  'The goliath birdeater is the biggest spider in the world. It is as big as a dinner plate with its legs spread. It mostly eats bugs and frogs, not birds.',
+  ['It hisses by rubbing its legs together.', 'It can flick tiny hairs to annoy enemies.']);
+k('regal-jumping-spider', 'A hunter with big eyes',
+  'The regal jumping spider is small, with two huge eyes. It does not spin a web. It sneaks up and leaps on its prey, many times its own body length.',
+  ['It can see colors and shapes very well.', 'It trails a silk thread as a safety line.']);
+k('common-octopus', 'The master of disguise',
+  'The octopus has eight arms, three hearts and blue blood! It can change color and shape to hide. It is very smart, and can open jars.',
+  ['It squirts ink to escape.', 'It has no bones, so it can squeeze through tiny gaps.']);
+k('moon-jellyfish', 'A drifter with no brain',
+  'The moon jellyfish is see-through and round, with four pale rings. It has no brain, no heart and no bones. It drifts with the ocean currents.',
+  ['It is almost all water.', 'It stings, but only very mildly.']);
+k('giant-clam', 'A clam that farms sunlight',
+  'The giant clam is the biggest clam in the world, as big as a bathtub. Tiny algae live in its skin and make food from sunlight. A giant clam can live for a hundred years.',
+  ['Its shell can be over a metre across.', 'Tiny algae in its skin share food with it.']);
+k('common-starfish', 'An eater with a stomach outside',
+  'A starfish has five arms and no brain. To eat, it pushes its stomach out of its body and wraps it around its food. If it loses an arm, it can grow a new one.',
+  ['It has tiny tube feet that help it walk.', 'It has an eye at the tip of each arm.']);
+k('peacock-mantis-shrimp', 'The fastest punch in the sea',
+  'The peacock mantis shrimp is a colorful sea animal with club-like arms. It punches as fast as a bullet, breaking shells and even glass. Its eyes see more colors than ours.',
+  ['Each eye can move on its own.', 'It makes bubbles that pop with a shockwave.']);
+k('lion-s-mane-jellyfish', 'A cloud of long stinging threads',
+  'The lion’s mane jellyfish is the biggest jellyfish. Its stinging tentacles can be longer than a blue whale. It lives in cold seas.',
+  ['The bell can be as wide as a car.', 'Small fish hide among its tentacles.']);
+k('staghorn-coral', 'A reef builder that grows fast',
+  'Staghorn coral looks like deer antlers. It is a colony of tiny animals that build a hard skeleton. It grows fast, and fish hide in its branches.',
+  ['Coral gardeners grow baby corals in underwater nurseries.', 'It has gotten very rare.']);
+k('chambered-nautilus', 'A living time capsule',
+  'The nautilus is a sea animal with a spiral shell. It has not changed much in hundreds of millions of years. Inside the shell are chambers filled with gas that help it float.',
+  ['It has up to ninety little tentacles.', 'It rises at night and sinks by day.']);
+
+/* ---------- Trees ---------- */
+k('giant-sequoia', 'A tree that survives fire',
+  'The giant sequoia is the biggest tree in the world by weight. Its bark is thick like a spongy blanket, so it does not burn easily. Some are over 3,000 years old.',
+  ['The biggest one is named General Sherman.', 'The cones need fire to open and release their seeds.']);
+k('coast-redwood', 'Drinking the fog',
+  'The coast redwood is the tallest tree in the world. It is taller than the Statue of Liberty. It grows in foggy places and drinks water right from the mist.',
+  ['Some redwoods are over 100 metres tall.', 'Whole ecosystems live up in the treetops.']);
+k('english-oak', 'A whole village in one tree',
+  'The oak is a large, strong tree that can live for hundreds of years. Its acorns feed squirrels and jays. Hundreds of kinds of insects live on a single oak.',
+  ['Jays bury acorns and forget some, which grow into new oaks.', 'An oak can drop thousands of acorns.']);
+k('african-baobab', 'The upside-down tree',
+  'The baobab has a super fat trunk that stores water. In the dry season, its bare branches look like roots, so it is called the upside-down tree. Elephants, birds and bats all use it.',
+  ['A baobab trunk can hold thousands of litres of water.', 'Bats visit its flowers at night.']);
+k('silver-birch', 'The white bark tree',
+  'The silver birch has white, papery bark with black cracks. It is one of the first trees to grow on bare ground. Its small leaves flutter in the wind.',
+  ['The bark peels in thin strips.', 'Its sap can be drunk or made into syrup.']);
+k('sugar-maple', 'The syrup tree',
+  'The sugar maple turns bright red and orange in the autumn. In late winter, people tap the tree to collect its sweet sap. Boiling the sap makes maple syrup.',
+  ['It takes about forty buckets of sap to make one bucket of syrup.', 'The maple leaf is on Canada’s flag.']);
+k('ginkgo', 'A tree older than dinosaurs',
+  'The ginkgo has fan-shaped leaves that turn golden in autumn. Its family is over 200 million years old. It is tough enough to grow on busy city streets.',
+  ['Ginkgo seeds smell stinky.', 'Some trees live for over a thousand years.']);
+k('red-mangrove', 'A tree that stands in the sea',
+  'The red mangrove grows in salty water, with its roots like stilts. Fish and baby sharks hide among the roots. Its seeds sprout while still on the tree, then drop into the mud.',
+  ['Its roots clean the salt out of the water.', 'Mangroves protect the coast from storms.']);
+k('monkey-puzzle-tree', 'A spiky tree from the dinosaur age',
+  'The monkey puzzle tree has sharp, scaly leaves and looks like it is from a dinosaur time. It comes from the mountains of Chile. It is said that a monkey would be puzzled trying to climb it.',
+  ['It can live for over a thousand years.', 'Its seeds are big and tasty.']);
+k('bristlecone-pine', 'One of the oldest living things',
+  'The bristlecone pine grows high up on dry, rocky mountains. It grows very slowly. Some are almost 5,000 years old.',
+  ['It was alive when the pyramids were built.', 'Dead wood on it can last for thousands of years.']);
+k('cork-oak', 'A tree you can peel',
+  'The cork oak has thick bark that is peeled off carefully every nine years or so. The tree is not hurt, and it grows new bark. Cork is used for bottle stoppers and notice boards.',
+  ['Cork floats on water.', 'The bark protects the tree from fire.']);
+k('dragon-s-blood-tree', 'An umbrella that catches clouds',
+  'The dragon’s blood tree grows on an island in the Indian Ocean. Its branches make a big umbrella shape that catches mist and gives shade. If you cut the bark, it oozes a red sap.',
+  ['The red sap looks like blood.', 'It looks like it’s from another planet.']);
+
+/* ---------- Flowers ---------- */
+k('sunflower', 'A flower that follows the sun',
+  'The sunflower can grow taller than a grown-up. Young sunflowers turn to face the sun all day long. The big middle is made up of hundreds of tiny flowers, which become seeds.',
+  ['The seeds are arranged in spirals.', 'Birds love sunflower seeds.']);
+k('common-daisy', 'The day’s eye',
+  'The daisy opens in the morning and closes at night. What looks like one flower is really lots of tiny flowers together. Its name means “day’s eye.”',
+  ['You can make a daisy chain.', 'Daisies grow on lawns.']);
+k('lavender', 'A smell bees love',
+  'Lavender has purple flowers and a sweet smell. Bees and butterflies love it. People use its scent in soaps and sachets.',
+  ['It smells when you brush the leaves.', 'Lavender honey is a favorite.']);
+k('bluebell', 'A carpet of blue',
+  'Bluebells cover woodland floors in spring with a blue-purple carpet. They flower before the trees grow leaves, to catch the sun. Britain has about half of all the bluebells in the world.',
+  ['Bluebells are poisonous to eat.', 'They take years to grow from seeds.']);
+k('common-poppy', 'Seeds that wait for years',
+  'The poppy has bright red petals like tissue paper. Seeds can sleep in the soil for many years. When the soil is turned over, they wake up and bloom.',
+  ['One plant can make thousands of seeds.', 'Poppies are used to remember people on special days.']);
+k('corpse-flower', 'The stinkiest flower',
+  'The corpse flower is huge, taller than a grown-up. When it blooms, it smells like rotting meat. That attracts flies, which carry its pollen.',
+  ['It only blooms once every several years.', 'It can warm itself to spread its smell.']);
+k('snowdrop', 'Blooming in the snow',
+  'The snowdrop is a small white flower that pops up in late winter. It can push through frozen ground and snow. It looks like a little bell.',
+  ['It is one of the first flowers of the year.', 'Its flowers droop their heads.']);
+k('edelweiss', 'A fuzzy flower on a mountain',
+  'The edelweiss grows high in the mountains. It is covered in fuzzy white hairs that keep it warm and protect it from the sun. The white “petals” are really furry leaves.',
+  ['It is a symbol of the Alps.', 'It is hard to find.']);
+k('foxglove', 'Pretty but poisonous',
+  'The foxglove has tall spikes of bell-shaped flowers. Bumblebees climb inside to find nectar. All parts of the plant are poisonous to people.',
+  ['Medicine for hearts was first made from foxgloves.', 'The spots in the flowers guide bees inside.']);
+k('dandelion', 'A weed with a parachute',
+  'The dandelion has yellow flowers that turn into a puffy white ball of seeds. Each seed has a tiny parachute. Make a wish and blow them away!',
+  ['Seeds can float for many kilometres.', 'Bees like dandelions in early spring.']);
+k('rafflesia', 'The biggest flower in the world',
+  'Rafflesia is a giant flower that can be as wide as a bicycle wheel. It has no leaves, no stem and no roots. It smells like rotting meat to attract flies.',
+  ['It grows on a vine, hidden inside it.', 'It blooms for only a few days.']);
+k('bee-orchid', 'A flower that looks like a bee',
+  'The bee orchid has a flower that looks and feels like a bee. A real bee tries to mate with it, and pollen sticks to the bee. In many places, the flower pollinates itself.',
+  ['It tricks the bees.', 'It grows in grassy places.']);
+k('sensitive-plant', 'A plant that flinches',
+  'The sensitive plant folds its leaves when you touch them. A few minutes later, they open up again. This may startle bugs that try to eat it.',
+  ['It also folds up at night.', 'Fluffy pink flowers appear in summer.']);
+k('white-water-lily', 'A flower that sleeps at night',
+  'The white water lily floats on ponds with big round leaves. Its flowers open in the morning and close in the evening. Long stems reach down to the mud.',
+  ['Frogs sit on the leaves.', 'The seeds float away on the water.']);
+k('sacred-lotus', 'Seeds that sleep for centuries',
+  'The lotus is a pink flower that grows from muddy water. Its leaves are so slippery that water rolls off in beads. Its seeds can sleep for hundreds of years and still sprout.',
+  ['A seed over a thousand years old sprouted.', 'The leaves stay clean in muddy water.']);
+k('giant-amazon-water-lily', 'Leaves that can hold a child',
+  'The giant water lily has round leaves up to three metres wide, with turned-up edges like a pie dish. The strong ribs under the leaf let it float. A child could sit on one if spread out gently.',
+  ['The flowers change from white to pink.', 'The underside has sharp spikes.']);
+k('eelgrass', 'A meadow under the sea',
+  'Eelgrass is a plant that grows underwater in shallow seas. It is not seaweed. It is a real flowering plant, and it makes flowers underwater.',
+  ['Baby fish hide in the grass.', 'Sea horses hold on to it.']);
+
+/* ---------- Ferns, mosses, succulents, carnivorous, grasses ---------- */
+k('bracken', 'A survivor from ancient times',
+  'Bracken is a big fern with feathery fronds. Ferns make tiny spores instead of seeds or flowers. Ferns grew on Earth before flowers did.',
+  ['Young fronds curl up like a bishop’s staff.', 'Bracken spreads fast.']);
+k('sphagnum-moss', 'A living sponge',
+  'Sphagnum moss soaks up water like a sponge. It can hold many times its own weight in water. Over thousands of years, it builds up bogs.',
+  ['It has been used to dress wounds.', 'Peat is made from old moss.']);
+k('soft-tree-fern', 'A fern with a trunk',
+  'The tree fern has a trunk and a crown of huge, feathery fronds. Ferns have been on Earth since before the dinosaurs. It grows in cool, wet forests.',
+  ['New fronds uncurl from tight spirals.', 'It can grow as tall as a house.']);
+k('field-horsetail', 'A plant with glass in its skin',
+  'Horsetail looks like a tiny bottle brush. Its stems have hard stuff called silica, like sand. People used it to scrub pots.',
+  ['Horsetails are like dinosaur-age plants.', 'They make spores, not seeds.']);
+k('saguaro', 'A cactus that stores water',
+  'The saguaro is a giant cactus in the Arizona desert. Its fat body can hold a lot of water, like a sponge. It may take 50 years to grow its first arm.',
+  ['It can live for 150 years or more.', 'Woodpeckers make nest holes in it.']);
+k('prickly-pear', 'A cactus with flat pads',
+  'The prickly pear cactus has flat green pads covered in spines. It grows tasty red fruits. The pads and fruits are eaten once the tiny spines are removed.',
+  ['The pads are called nopales.', 'Birds eat the fruit and spread the seeds.']);
+k('living-stones', 'A plant that looks like a pebble',
+  'Living stones look just like pebbles. Each plant is just two thick leaves with a split between them. This hides them from animals that might eat them.',
+  ['A flower pops up from the split.', 'They grow in dry deserts in southern Africa.']);
+k('venus-flytrap', 'A plant that counts',
+  'The Venus flytrap is a plant that eats bugs. Its leaf is a trap with spiky edges. If a bug touches two hairs inside, the trap snaps shut.',
+  ['It can count: it needs two touches.', 'It takes days to digest its meal.']);
+k('northern-pitcher-plant', 'A slippery trap',
+  'The pitcher plant has leaves shaped like tall vases. Bugs slip on the slick rim and fall in. They drown in the pool of water at the bottom.',
+  ['Mosquito babies can live safely inside.', 'It grows in boggy places.']);
+k('round-leaved-sundew', 'A plant with sticky dewdrops',
+  'The sundew has round leaves covered in red hairs with sticky drops. Bugs get stuck, and the hairs curl around them. Even Charles Darwin loved studying it.',
+  ['The drops look like morning dew.', 'It lives in bogs.']);
+k('moso-bamboo', 'The fastest-growing plant',
+  'Moso bamboo is a giant grass. It can grow about a metre in a day. It is hollow inside, strong, and used to build things.',
+  ['Some bamboos flower only once every 60 years.', 'Pandas love to eat bamboo.']);
+k('papyrus', 'The plant that gave us paper',
+  'Papyrus is a tall reed that grows along the Nile River. Ancient Egyptians cut it into strips and pressed them into sheets to write on. The word paper comes from papyrus.',
+  ['It can grow taller than a grown-up.', 'Boats were made from it.']);
+k('marram-grass', 'The grass that makes sand dunes',
+  'Marram grass grows on beach dunes. Its roots hold the sand in place, so the wind does not blow it away. It grows better when sand covers it.',
+  ['Its leaves roll up to save water.', 'It makes the dunes grow.']);
+
+/* ---------- Edible plants ---------- */
+k('wild-apple', 'The mother of all apples',
+  'The wild apple tree grows in the mountains of Central Asia. Every apple in the shop came from trees like it. The wild apples are small and sour.',
+  ['There are thousands of kinds of apples.', 'Apple flowers are pink and white.']);
+k('wild-strawberry', 'A fruit with its seeds on the outside',
+  'Wild strawberries are tiny and super sweet. They grow low to the ground and spread by runners. The seeds on the outside are the real fruits.',
+  ['A strawberry has about 200 seeds.', 'Birds love to eat them.']);
+k('blackberry', 'A thorny home for wildlife',
+  'Blackberries grow on prickly bushes called brambles. The berries turn from green to red to black. Birds and hedgehogs hide in the thorns.',
+  ['Each berry is a cluster of tiny fruits.', 'Bees love the flowers.']);
+k('highbush-blueberry', 'The berry with a wax coat',
+  'The blueberry is a small, round, blue berry. A powdery wax coating on the skin protects it. The bush turns bright red in autumn.',
+  ['Blueberries are often called a superfruit.', 'The bushes can live for decades.']);
+k('wild-banana', 'A giant herb with seeds',
+  'Wild bananas are full of hard black seeds. The bananas we eat have been bred to have none. A banana “tree” is really a giant herb.',
+  ['Bananas grow in bunches called hands.', 'The trunk is made of leaf bases.']);
+k('mango', 'The king of fruits',
+  'The mango is a sweet, juicy tropical fruit. It grows on big trees, and each tree can make fruit for over a hundred years. Mangoes are the national fruit of India.',
+  ['A mango has one big flat seed.', 'Mango trees grow very tall.']);
+k('coconut-palm', 'The tree that sails the seas',
+  'The coconut palm grows on tropical beaches. Its coconuts can float for months on the sea and then sprout on a new island. People use its water, its meat and its leaves.',
+  ['A coconut can float across the sea.', 'Coconut water is sweet.']);
+k('olive-tree', 'A tree that lives for ages',
+  'The olive tree has silvery leaves and a twisty trunk. Some olive trees are over two thousand years old. Its fruit is pressed to make olive oil.',
+  ['Olives are too bitter to eat fresh.', 'It grows around the Mediterranean.']);
+k('grapevine', 'A climber that grabs on',
+  'The grapevine climbs by grabbing with curly tendrils. It grows bunches of grapes. Grapes can be eaten, dried as raisins or squeezed into juice.',
+  ['Grapes grow in bunches.', 'Raisins are dried grapes.']);
+k('common-fig', 'A flower turned inside out',
+  'The fig fruit is actually a hollow ball with tiny flowers inside. A tiny wasp crawls in to pollinate them. Figs are sweet and full of tiny crunchy seeds.',
+  ['Fig trees have been grown for thousands of years.', 'The leaves are big and lobed.']);
+k('pineapple', 'A fruit made of many fruits',
+  'A pineapple is not just one fruit. It is a bunch of fruits fused together. If you plant the leafy top, a new pineapple plant grows.',
+  ['It takes about two years to grow.', 'The plant grows on the ground, not on a tree.']);
+k('cacao-tree', 'The chocolate tree',
+  'Chocolate comes from the seeds of the cacao tree. The seeds grow in big football-shaped pods on the trunk. They are dried and ground to make chocolate.',
+  ['Tiny midges pollinate the flowers.', 'Cacao seeds are bitter until made into chocolate.']);
+k('coffee-plant', 'The shrub that wakes people up',
+  'The coffee plant grows red berries called cherries. Inside are the seeds we roast to make coffee. A story says goats first found it, and then danced all night.',
+  ['Coffee first grew wild in Ethiopia.', 'Coffee is made from roasted seeds.']);
+k('wild-garlic', 'A forest that smells like dinner',
+  'Wild garlic carpets the woods in spring with white starry flowers. All parts of the plant smell of garlic. The leaves are eaten in soups and pesto.',
+  ['You can smell it before you see it.', 'Its other name is ramsons.']);
+k('stinging-nettle', 'A plant that fights back',
+  'The nettle has tiny hairs that sting when touched. But if you cook the leaves, they are safe to eat, and make soup. Butterflies lay eggs on nettles.',
+  ['The hairs act like tiny needles.', 'Nettles were once used to make cloth.']);
+k('wild-carrot', 'The ancestor of carrots',
+  'Wild carrot has lacy white flowers, with a tiny dark red flower in the middle. Its pale root is the ancestor of orange carrots. Farmers bred carrots from roots like it.',
+  ['Orange carrots are a fairly new invention.', 'It is also called Queen Anne’s lace.']);
+k('potato', 'A mountain crop that fed the world',
+  'Potatoes grew first in the Andes mountains. The part we eat is a swollen underground stem called a tuber. The green parts and green potatoes are poisonous.',
+  ['There are thousands of kinds of potatoes.', 'Always cook potatoes before eating.']);
+k('watercress', 'One of the oldest salads',
+  'Watercress grows in clean, flowing streams. It has a peppery taste. It should only be picked from clean water.',
+  ['It has been eaten for thousands of years.', 'It grows quickly.']);
+k('wheat', 'The grass that built cities',
+  'Wheat is a grass whose seeds are ground into flour. The flour makes bread, pasta and cakes. People began growing it over ten thousand years ago.',
+  ['Wheat is grown all over the world.', 'It turns golden when ripe.']);
+k('rice', 'A plant with wet feet',
+  'Rice grows in flooded fields called paddies. The seeds are eaten by more people than any other food. Rice is the main food for billions of people.',
+  ['Rice plants can grow in water.', 'Brown and white rice come from the same plant.']);
+k('maize', 'Corn, from a Mexican grass',
+  'Maize, or corn, was bred from a wild grass in Mexico long ago. Each ear has hundreds of kernels. It can be yellow, white, red, blue or purple.',
+  ['Popcorn is a special corn that pops.', 'Each silk thread leads to one kernel.']);
+k('english-walnut', 'A nut that looks like a brain',
+  'The walnut has a hard shell with a wrinkly nut inside. The nut looks like a tiny brain. The tree gives off a chemical that makes it hard for other plants to grow nearby.',
+  ['Walnut trees can grow very big.', 'Squirrels love walnuts.']);
+k('common-hazel', 'A shrub that grows back',
+  'The hazel is a bushy tree that gives us hazelnuts. For thousands of years, people have cut the stems low so that new ones grow back. Squirrels and dormice love the nuts.',
+  ['Catkins appear in late winter.', 'Hazel sticks are used for fences.']);
+k('brazil-nut-tree', 'A rainforest giant',
+  'The Brazil nut tree is one of the tallest trees in the Amazon. Its big, round pods are as hard as a coconut. Agoutis crack them open and bury the seeds, which grow into new trees.',
+  ['A pod can fall like a cannonball.', 'The tree is hard to grow on farms.']);
+k('sweet-chestnut', 'The bread tree',
+  'The sweet chestnut makes spiky green cases that hold shiny brown nuts. People roast the nuts in winter. The tree can live for centuries, and its trunk twists as it ages.',
+  ['The nuts can be ground into flour.', 'Don’t mix them up with horse chestnuts, which are not for eating.']);
+k('quinoa', 'A super seed',
+  'Quinoa grows high in the Andes mountains. The small seeds are cooked like rice. It is not a grass. It is related to spinach.',
+  ['Quinoa seeds come in white, red and black.', 'It was called “mother grain” by the Incas.']);
+k('spearmint', 'A herb that takes over the garden',
+  'Spearmint is a herb with bright green leaves. When you crush a leaf, it smells strongly of mint. It spreads fast, so gardeners keep it in pots.',
+  ['It is used in tea and toothpaste.', 'Bees visit the flowers.']);
+k('basil', 'A summer herb with a royal name',
+  'Basil is a sweet-smelling herb. Its leaves are used in pizza, pasta and pesto. The name basil comes from a Greek word that means “royal.”',
+  ['It grows best in warm sun.', 'Basil is related to mint.']);
+k('rosemary', 'The dew of the sea',
+  'Rosemary is a shrub with needle-like leaves and a strong smell. It grows by the sea in warm places. Its name means “dew of the sea.”',
+  ['It has blue flowers.', 'People use it to flavor roast potatoes.']);
+k('thyme', 'A tiny herb for bees',
+  'Thyme is a tiny herb that grows in sunny places. Its flowers feed lots of bees. The little leaves are used in cooking.',
+  ['Thyme honey is very special.', 'It grows low to the ground.']);
+k('black-pepper', 'The spice that launched ships',
+  'Black pepper comes from the berries of a climbing vine. The berries are dried until they turn black and wrinkled. Long ago, pepper was so valuable that it was used like money.',
+  ['Sailors crossed oceans to find pepper.', 'Peppercorns are berries.']);
+k('vanilla-orchid', 'An orchid you can eat',
+  'Vanilla is the only orchid that is grown for food. Its flowers open for just one day. The long green pods are dried and cured to get the vanilla flavor.',
+  ['Each flower must be pollinated by hand.', 'Vanilla is a very expensive spice.']);
+k('ginger', 'A spicy underground stem',
+  'Ginger grows underground as a knobbly stem called a rhizome. It tastes spicy and warm. It is used in gingerbread and tea.',
+  ['The plant has pretty flowers.', 'People call it ginger root.']);
+k('chilli-pepper', 'Fire for mammals, not for birds',
+  'Chilli peppers make a chemical that burns your mouth. Birds cannot feel the heat, so they eat the berries and spread the seeds. The plant gets its seeds spread, and mammals stay away.',
+  ['Chillies come in red, green and yellow.', 'Hot chillies are measured on a scale.']);
+k('sugarcane', 'A giant grass full of sweet juice',
+  'Sugarcane is a tall grass with sweet juice in its stems. The juice is boiled to make sugar. It can grow several centimetres in a day.',
+  ['It looks like bamboo.', 'You can chew the stems.']);
+k('nasturtium', 'A flower for your salad',
+  'The nasturtium has bright orange and yellow flowers. The leaves are round and shed raindrops like beads. Both flowers and leaves are peppery and can go on salads.',
+  ['The seeds are big and wrinkly.', 'It climbs by its stalks.']);
+k('elder', 'A tree for flowers and berries',
+  'The elder has frothy white flowers in summer and black berries in autumn. The flowers can make a fizzy drink. The berries must be cooked before eating.',
+  ['Raw elderberries can upset the tummy.', 'Birds love the berries.']);
+k('dog-rose', 'A wild rose with red hips',
+  'The dog rose is a thorny wild rose with pink flowers. The red fruits that follow are called hips. During the Second World War, children collected rosehips to make a vitamin syrup.',
+  ['The hips are full of vitamin C.', 'Birds eat the hips in winter.']);
+
+/* ---------- More edible plants ---------- */
+k('tomato', 'A fruit disguised as a vegetable',
+  'The tomato began as a tiny wild plant in the Andes mountains. A tomato is a fruit because it has seeds inside. Its leaves and stems are not good to eat.',
+  ['Tomatoes can be red, yellow, orange or even purple.', 'Tomatoes ripen faster near ripe bananas.']);
+k('pumpkin', 'A giant berry',
+  'Pumpkins grow on long vines with big yellow flowers. They ripen in autumn. The flesh, the seeds and even the flowers can be cooked and eaten.',
+  ['Giant pumpkins can weigh over a tonne.', 'People carve pumpkins into lanterns for Halloween.']);
+k('avocado', 'A seed built for a giant',
+  'The avocado tree grows creamy fruit with one huge seed. Scientists think giant ground sloths once ate avocados and spread the seeds. Today people do that job.',
+  ['An avocado is a fruit.', 'The fruit ripens after it is picked.']);
+k('cinnamon-tree', 'Bark that curls into a spice',
+  'Cinnamon comes from the inner bark of a tree. Workers peel it, and it curls up as it dries into sticks. Cinnamon is used in cakes and hot drinks.',
+  ['Sri Lanka is famous for cinnamon.', 'The leaves also smell like cinnamon.']);
+k('tea-plant', 'One plant, many teas',
+  'Tea comes from the leaves of the tea plant. Green tea, black tea and white tea all come from the same plant. The leaves are treated in different ways.',
+  ['The best leaves come from the top of the plant.', 'Tea grows on misty hillsides.']);
+k('wild-raspberry', 'A cluster of tiny fruits',
+  'The wild raspberry grows in forest clearings. Each berry is a cluster of tiny juicy bobbles, each with a seed. The canes have little prickles.',
+  ['Bears and birds love raspberries.', 'A raspberry pulls off the plant, leaving a hollow.']);
+k('american-cranberry', 'A berry that floats',
+  'Cranberries grow on low vines in boggy fields. They have tiny air pockets inside, so they float. When farmers flood the field, the red berries bob up like a red carpet.',
+  ['Cranberries are tart.', 'They can bounce.']);
+k('lemon-tree', 'Sour but sunny',
+  'The lemon tree has shiny leaves and sweet-smelling flowers. Its yellow fruit is very sour. We squeeze the juice, and use the peel for flavor.',
+  ['Lemons float in water.', 'Sailors took lemons on long trips.']);
+k('sweet-orange', 'Gold on a tree',
+  'The orange tree grows round, juicy fruit. When you peel it, the skin sprays a fragrant mist. In warm places, ripe oranges can stay green!',
+  ['The blossoms smell wonderful.', 'Orange trees are grown in warm lands.']);
+k('date-palm', 'A tree that feeds the desert',
+  'The date palm grows in deserts, where its roots find water. Bunches of sweet, sticky dates hang from it. People have grown dates for thousands of years.',
+  ['One tree gives many kilograms of dates.', 'Dates keep for a long time.']);
+k('pomegranate', 'A jewel box fruit',
+  'The pomegranate has a tough, leathery skin. Inside are hundreds of seeds, each wrapped in a juicy red pocket. It has a crown on top.',
+  ['The juice stains red.', 'The seeds look like rubies.']);
+k('papaya', 'A tree that grows fast',
+  'The papaya grows quickly, and can have fruit in under a year. Its trunk is hollow. The sweet orange fruit grows in a bunch just below the leaves.',
+  ['It is really a giant herb.', 'The juice can soften meat.']);
+k('garden-pea', 'The plant that taught us about genes',
+  'Peas grow in pods on climbing plants with curly tendrils. A monk named Gregor Mendel used pea plants to learn how parents pass traits to their children. Peas are very sweet when fresh.',
+  ['Peas like cool weather.', 'Peas have been eaten for thousands of years.']);
+k('spinach', 'A leafy green with a famous fan',
+  'Spinach is a dark green leafy plant. It grows best in cool weather. The cartoon sailor Popeye ate it to get strong.',
+  ['Spinach shrinks a lot when cooked.', 'It came from Persia, now Iran.']);
+k('sweet-potato', 'A root with a secret cousin',
+  'The sweet potato is not related to the potato. It is related to morning glory flowers. The roots are orange, white or purple, and sweet when cooked.',
+  ['The leaves can be eaten too.', 'It grows on trailing vines.']);
+k('cassava', 'A root that needs cooking',
+  'Cassava has big, starchy roots that feed hundreds of millions of people. But raw cassava is poisonous, so it has to be peeled, soaked and cooked. Tapioca pearls in bubble tea come from cassava.',
+  ['It grows well in poor soil.', 'It can survive dry weather.']);
+k('peanut', 'A pod that buries itself',
+  'The peanut flower bends down and pushes its pod into the soil. The peanuts ripen underground. Peanuts are not true nuts. They are beans!',
+  ['Peanuts are also called groundnuts.', 'Peanut butter is made from them.']);
+k('almond', 'A seed from the peach family',
+  'The almond tree is covered with pink and white blossoms in late winter. The almond is the seed inside a hard shell. Wild almonds can be bitter and poisonous.',
+  ['Almonds are cousins of peaches.', 'Bees pollinate almond trees.']);
+k('soybean', 'The bean with a thousand uses',
+  'Soybeans grow in fuzzy pods. They are made into tofu, soy milk and soy sauce. Young green soybeans are called edamame.',
+  ['Soybean roots add natural food to the soil.', 'People have eaten soy for thousands of years.']);
+k('oats', 'From weed to breakfast',
+  'Oats are grasses with drooping seeds. Long ago, oats were just a weed in wheat fields. Now we eat them as porridge, and horses eat them too.',
+  ['Rolled oats are steamed and flattened.', 'Oats grow well in cool, damp places.']);
+k('saffron-crocus', 'The golden threads',
+  'The saffron crocus has purple flowers with three red threads inside. People pick the threads by hand and dry them. It takes about 150 flowers to make one gram of saffron.',
+  ['Saffron is the most expensive spice.', 'It turns food golden yellow.']);
+k('wild-fennel', 'A feast for caterpillars',
+  'Wild fennel is a tall plant with feathery leaves and yellow flowers. It tastes like licorice. Swallowtail butterflies lay their eggs on it.',
+  ['All parts are edible.', 'It grows near the sea.']);
+k('wood-sorrel', 'A shamrock that sleeps',
+  'Wood sorrel has three heart-shaped leaves, like a shamrock. The leaves fold down at night. They taste lemony and sour.',
+  ['Its flowers are white with purple lines.', 'It grows in shady woods.']);
+k('stone-pine', 'The umbrella pine',
+  'The stone pine has a wide, flat top like an umbrella. Its big cones take about three years to ripen. Inside are pine nuts, which are used in pesto.',
+  ['It grows along the Mediterranean coast.', 'Pine nuts are small and creamy.']);
+
+/* ---------- Fungi ---------- */
+k('fly-agaric', 'The fairy-tale toadstool',
+  'The fly agaric is the red mushroom with white spots from storybooks. It grows under birch and pine trees. It is poisonous, so never eat it!',
+  ['The bright red cap is a warning.', 'It is often drawn with fairies.']);
+k('death-cap', 'The deadliest mushroom',
+  'The death cap looks like an ordinary mushroom, but it is one of the most poisonous in the world. Just a bit can make a person very ill. Never touch or taste wild mushrooms.',
+  ['It looks like safe mushrooms, which is why it is dangerous.', 'Always ask an expert about wild mushrooms.']);
+k('chanterelle', 'A golden mushroom that smells like apricots',
+  'The chanterelle is a golden, trumpet-shaped mushroom. It smells a bit like apricots. It grows in forests, and has never been successfully farmed.',
+  ['Experts find it in the woods.', 'It has ridges instead of gills.']);
+k('porcini', 'A forest favorite',
+  'Porcini have a fat stem and a brown cap, like a bread roll. Under the cap are tiny pores, not gills. They team up with tree roots and swap nutrients.',
+  ['The name means “little pigs” in Italian.', 'It helps trees grow.']);
+k('common-morel', 'A mushroom with a honeycomb cap',
+  'The morel has a cap full of pits, like a honeycomb. It pops up in spring. Some morels grow in great numbers after a forest fire.',
+  ['It is hollow inside.', 'It must be cooked before eating.']);
+k('oyster-mushroom', 'A mushroom that eats worms',
+  'Oyster mushrooms grow in shelves on dead trees. They are shaped like an oyster. They can even trap and eat tiny worms for extra food.',
+  ['They grow quickly.', 'They are easy to grow at home.']);
+k('giant-puffball', 'A mushroom as big as a soccer ball',
+  'The giant puffball can grow as big as a soccer ball or bigger. It is white and round. When it is ripe, it puffs out trillions of spores.',
+  ['A giant puffball can grow very fast.', 'It looks like a big white ball in the grass.']);
+k('shaggy-ink-cap', 'A mushroom that melts into ink',
+  'The shaggy ink cap has a tall, white shaggy cap. As it ages, the cap melts into black, inky goo. People have used the goo as real ink!',
+  ['It grows in lawns and roadsides.', 'It melts within hours.']);
+k('lion-s-mane', 'A shaggy white mushroom',
+  'Lion’s mane grows on trees and looks like a white pom-pom with long, soft spines. It looks like a lion’s mane. It tastes a bit like seafood.',
+  ['It has no cap or gills.', 'It is grown on farms.']);
+k('turkey-tail', 'A rainbow shelf on dead wood',
+  'Turkey tail grows in layers on dead logs. Its colorful bands look like a turkey’s tail. It is too tough to eat.',
+  ['It grows all over the world.', 'It comes in many colors.']);
+k('shiitake', 'The savory log mushroom',
+  'Shiitake grows on logs in the forests of Asia. It has a brown cap with pale gills. It has a rich, meaty flavor and is used in many dishes.',
+  ['Dried shiitake have a stronger flavor.', 'Farmers grow it on logs.']);
+k('button-mushroom', 'One mushroom, three names',
+  'The button mushroom is the most common mushroom in shops. White buttons, brown chestnut mushrooms and big portobellos are all the same kind. They grow in dark rooms on compost.',
+  ['A portobello is just a grown-up button.', 'It grows without any sunlight.']);
+k('chicken-of-the-woods', 'A shelf that tastes like chicken',
+  'Chicken of the woods is a bright orange and yellow mushroom that grows in shelves on trees. When young and cooked, some people say it tastes like chicken. It slowly rots the tree it grows on.',
+  ['Ask an expert before you eat a wild mushroom.', 'It can come back in the same spot each year.']);
+k('hen-of-the-woods', 'The dancing mushroom',
+  'Hen of the woods looks like a pile of ruffled feathers at the base of oak trees. In Japan it is called maitake, which means “dancing mushroom.” A legend says people danced for joy when they found one.',
+  ['It can grow very large.', 'It grows back year after year.']);
+k('enoki', 'Noodles from the dark',
+  'Wild enoki are short, brown and sticky. Shop enoki are long and white because they grow in the dark. They look like bundles of noodles.',
+  ['They grow in winter in the wild.', 'They are crunchy.']);
+k('wood-ear', 'A jelly ear',
+  'The wood ear is a rubbery brown fungus shaped like an ear. It grows on dead branches. It dries up in dry weather and swells in the rain.',
+  ['It feels like jelly.', 'It is used in soups.']);
+k('black-truffle', 'Treasure underground',
+  'Black truffles grow underground on tree roots. They smell strong. Trained dogs can sniff them out. They are one of the most expensive foods in the world.',
+  ['Pigs were once used to find truffles.', 'Truffles are rare.']);
+k('parasol-mushroom', 'The tall umbrella',
+  'The parasol mushroom grows tall and opens like an umbrella. Its stem has a snakeskin pattern. It can grow 40 centimetres tall.',
+  ['It grows very quickly.', 'It has a ring on the stem that can slide.']);
+k('zombie-ant-fungus', 'The puppet master',
+  'This fungus infects ants in the rainforest. The ant climbs up a plant and bites onto a leaf. Then the fungus grows out of the ant’s head to spread its spores.',
+  ['The ant tends to bite at around midday.', 'Some ants can fight it off.']);
+k('common-stinkhorn', 'The stinky fast grower',
+  'The stinkhorn starts as a white egg in the soil. In a few hours, a stalk pushes out with a slimy green top. It smells like rotten meat, which flies love.',
+  ['It grows super fast.', 'Flies carry its spores away.']);
+k('ghost-fungus', 'A fungus that glows',
+  'The ghost fungus glows green in the dark. It grows on dead trees in Australia. Scientists think the glow attracts insects to spread its spores. It is poisonous, so never eat it!',
+  ['The glow is dim but real.', 'You need dark eyes to see it.']);
+k('bleeding-tooth-fungus', 'The fungus that bleeds',
+  'The bleeding tooth fungus has red drops that ooze on the top of the cap. The drops look like blood. It is bitter and not eaten.',
+  ['The “blood” is sap.', 'It has tiny teeth under the cap.']);
+k('earthstar', 'A star that puffs',
+  'The earthstar starts as a ball. Its outer skin splits and peels back into pointed star arms. In the middle is a ball of spores, and a raindrop makes it puff.',
+  ['Raindrops make it puff out spores.', 'It looks like a star on the ground.']);
+k('humpback-whale', 'Singing songs and blowing bubble nets',
+  'The humpback whale is a huge whale that leaps out of the water. To catch fish, a group blows a ring of bubbles around them like a net. The boys sing long, complicated songs that change from year to year.',
+  ['Every humpback has a tail pattern that is different, like a fingerprint.', 'Humpbacks swim thousands of kilometres each year.']);
+k('orca', 'Hunting in a team',
+  'The orca, or killer whale, is really a giant dolphin. Orcas live in family groups called pods, and hunt together like a wolf pack. Grandmas stay with the family and show the young where to find food.',
+  ['Each pod has its own special calls.', 'Orcas are one of the fastest swimmers in the sea.']);
+</script>
   <script>
 (() => {
   'use strict';
@@ -2787,7 +4320,7 @@ x('turkey-tail', 'A rainbow shelf on dead wood',
       h('div', { class: 'card-body' },
         h('h3', {}, h('button', { type: 'button', onclick: () => openAnimal(an.id) }, an.name)),
         h('p', { class: 'sci', text: an.sci }),
-        EXTRA[an.id] ? h('p', { class: 'power', text: '✨ ' + EXTRA[an.id].power }) : null,
+        (settings.kid && KID[an.id] || EXTRA[an.id]) ? h('p', { class: 'power', text: '✨ ' + (settings.kid && KID[an.id] || EXTRA[an.id]).power }) : null,
         h('div', { class: 'tags' },
           h('span', { class: 'tag', text: an.group }),
           h('span', { class: 'tag status', 'data-st': an.status, text: an.status }),
@@ -2930,7 +4463,7 @@ x('turkey-tail', 'A rainbow shelf on dead wood',
   /* ------------------------------------------------------------------ speech */
   const SUPPORTED = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
   const synth = SUPPORTED ? window.speechSynthesis : null;
-  const settings = { voiceURI: store.get('ww-voice', ''), rate: store.get('ww-rate', 0.88) };
+  const settings = { voiceURI: store.get('ww-voice', ''), rate: Math.min(2, Math.max(0.5, Number(store.get('ww-rate2', 0.9)) || 0.9)), kid: store.get('ww-kid', true) !== false };
 
   const BAD_VOICE = /albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|hysterical|junior|organ|superstar|trinoids|whisper|wobble|zarvox|ralph|fred|espeak|compact|pipe|grandma|grandpa|eddy|flo\b|reed|rocko|sandy|shelley/i;
   const GENTLE_VOICE = /samantha|serena|karen|moira|fiona|tessa|libby|sonia|aria|jenny|ava|allison|susan|catherine|zira|hazel|female|natasha|olivia|emma|amy|joanna|salli|kendra|ivy|nicole/i;
@@ -3031,7 +4564,7 @@ x('turkey-tail', 'A rainbow shelf on dead wood',
   /* Player UI (dialog + facet note) */
   const ui = {
     play: $('#play'), stop: $('#stop'), bar: $('#bar'), status: $('#sayStatus'),
-    voice: $('#voice'), rate: $('#rate'), rateOut: $('#rateOut'), help: $('#voiceHelp'), ambient: $('#ambient'),
+    voice: $('#voice'), rate: $('#rate'), rateOut: $('#rateOut'), slower: $('#slower'), faster: $('#faster'), kidBtn: $('#kidToggle'), help: $('#voiceHelp'), ambient: $('#ambient'),
   };
 
   function updatePlayerUI(message) {
@@ -3077,15 +4610,25 @@ x('turkey-tail', 'A rainbow shelf on dead wood',
   } else {
     ui.play.disabled = true;
     ui.voice.disabled = true;
-    ui.rate.disabled = true;
+    ui.rate.disabled = true; ui.slower.disabled = true; ui.faster.disabled = true;
     ui.help.textContent = 'Sorry, this browser cannot read text aloud. Try a recent version of Chrome, Edge, Safari or Firefox.';
   }
-  ui.rate.value = settings.rate;
-  const showRate = () => { ui.rateOut.textContent = settings.rate <= 0.8 ? 'slow' : settings.rate <= 0.96 ? 'calm' : 'brisk'; };
+  const showRate = () => {
+    ui.rate.value = settings.rate;
+    ui.rateOut.textContent = `${+settings.rate.toFixed(2)}×`;
+  };
+  let rateTimer = 0;
+  const setRate = (r) => {
+    settings.rate = Math.round(Math.min(2, Math.max(0.5, r)) * 20) / 20;
+    store.set('ww-rate2', settings.rate); showRate();
+    clearTimeout(rateTimer);
+    // Restart the current sentence so the new speed is heard straight away.
+    if (Speech.state === 'playing') rateTimer = setTimeout(() => Speech.play(Speech.idx), 250);
+  };
   showRate();
-  ui.rate.addEventListener('input', () => {
-    settings.rate = parseFloat(ui.rate.value); store.set('ww-rate', settings.rate); showRate();
-  });
+  ui.rate.addEventListener('input', () => setRate(parseFloat(ui.rate.value)));
+  ui.slower.addEventListener('click', () => setRate(settings.rate - 0.1));
+  ui.faster.addEventListener('click', () => setRate(settings.rate + 0.1));
 
   ui.play.addEventListener('click', () => {
     if (Speech.owner !== 'dialog') return;
@@ -3094,6 +4637,14 @@ x('turkey-tail', 'A rainbow shelf on dead wood',
     else Speech.play(0);
   });
   ui.stop.addEventListener('click', () => Speech.stop());
+
+  ui.kidBtn.setAttribute('aria-pressed', String(settings.kid));
+  ui.kidBtn.addEventListener('click', () => {
+    settings.kid = !settings.kid; store.set('ww-kid', settings.kid);
+    ui.kidBtn.setAttribute('aria-pressed', String(settings.kid));
+    renderGrid();
+    if (dlg.open && curId) openAnimal(curId);
+  });
 
   /* ---------------------------------------------------------------- ambience */
   const Ambience = {
@@ -3184,6 +4735,27 @@ x('turkey-tail', 'A rainbow shelf on dead wood',
     const parts = an.edible.map((e) => ({ 'Fruit': 'fruit', 'Leaves & greens': 'leaves', 'Roots & tubers': 'roots', 'Seeds, nuts & grains': 'seeds', 'Flowers': 'flowers', 'Herbs & spices': 'flavour', 'Sap & syrup': 'sweet sap', 'Stems & shoots': 'young shoots' })[e]);
     return [`People can eat its ${listJoin(parts)}, but never eat a wild plant unless an expert has told you it is safe.`];
   };
+  const KID_ACTIVE = { 'Day': 'It is awake in the daytime.', 'Night': 'It is awake at night.', 'Dawn & dusk': 'It is awake early in the morning and in the evening.', 'Any time': 'It is awake both day and night.' };
+  const KID_EAT = { 'Carnivore': 'It eats other animals.', 'Herbivore': 'It eats plants.', 'Omnivore': 'It eats both plants and animals.', 'Insectivore': 'It eats bugs.', 'Filter feeder': 'It strains tiny bits of food out of the water.' };
+  const KID_STATUS = {
+    'Least Concern': 'There are plenty of them, so they are doing well.',
+    'Near Threatened': 'There are getting to be fewer of them, so we need to keep watching out for them.',
+    'Vulnerable': 'They are in trouble, and we need to help protect them.',
+    'Endangered': 'There are not many left, so we need to help protect them.',
+    'Critically Endangered': 'There are very, very few left. They need our help right now!',
+    'Data Deficient': 'Scientists are still learning how many there are.',
+    'Not Evaluated': 'Scientists have not counted how many there are yet.',
+  };
+  function kidHabits(an) {
+    if (an.kind === 'animal') return [KID_EAT[an.diet] || dietSentence(an), KID_ACTIVE[an.active], whereSentence(an)];
+    const out = [an.kind === 'fungus' ? 'A fungus is not a plant and not an animal. It gets its food from dead wood and fallen leaves.'
+      : an.diet === 'Insectivore' ? 'It makes food from sunlight, and it also catches bugs to eat!'
+      : 'It makes its own food from sunlight, water and air.'];
+    out.push(an.season.includes('All year') ? 'It looks good all year round.' : `It is at its best in ${listJoin(an.season.map(lc))}.`, whereSentence(an));
+    if (an.kind === 'fungus') out.push(an.edible?.length ? 'Some mushrooms are safe to eat, but many can make you very sick. Never pick or eat wild mushrooms. Ask an expert.' : 'Never eat wild mushrooms. Some can make you very sick.');
+    else if (an.edible?.length) out.push('People can eat parts of this plant. Always ask a grown-up first, and never eat wild plants on your own.');
+    return out;
+  }
   const dietSentence = (an) => `It is ${ARTICLE(an.diet)} ${lc(an.diet)}, and it is ${ACTIVE_PHRASE[an.active]}.`;
   const plantSentences = (an) => [
     an.kind === 'fungus'
@@ -3250,7 +4822,26 @@ x('turkey-tail', 'A rainbow shelf on dead wood',
     items[items.length - 1].pause = 800;
     const status = h('p', {}, sentSpan(STATUS_SPOKEN[an.status]));
 
-    d.body.replaceChildren(...[powerBox, desc, storyBox, habits, factBox, status].filter(Boolean));
+    let blocks;
+    const kd = settings.kid ? KID[an.id] : null;
+    if (kd) {
+      items.length = 1;
+      const kidPower = h('div', { class: 'power-box' }, h('span', { class: 'lead', text: 'Superpower' }), sentSpan(kd.power, 'Its superpower: ' + kd.power + '.'));
+      items[items.length - 1].pause = 800;
+      const kidStory = h('section', { class: 'kid-story' }, h('h3', { text: 'Meet the ' + an.name }), para(splitSentences(kd.story)));
+      items[items.length - 1].pause = 800;
+      const kul = h('ul', { class: 'wow kid' });
+      for (const w of kd.wow) { kul.append(h('li', {}, sentSpan(w))); items[items.length - 1].pause = 600; }
+      kidStory.append(h('h3', { text: 'Wow!' }), kul);
+      const kidHab = para(kidHabits(an));
+      items[items.length - 1].pause = 800;
+      const kidStatus = h('p', {}, sentSpan(KID_STATUS[an.status]));
+      const grown = h('details', { class: 'grown-up' }, h('summary', { text: 'Grown-up version' }), h('p', { text: an.text }), ex ? h('p', { text: ex.story }) : null);
+      blocks = [kidPower, kidStory, kidHab, kidStatus, grown];
+    } else {
+      blocks = [powerBox, desc, storyBox, habits, factBox, status].filter(Boolean);
+    }
+    d.body.replaceChildren(...blocks);
     d.body.querySelectorAll('.sent').forEach((n) => { n.title = 'Read from here'; });
     d.name.title = 'Read from the start';
 
